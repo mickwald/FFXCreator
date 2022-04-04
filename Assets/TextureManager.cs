@@ -12,20 +12,16 @@ public class TextureManager : MonoBehaviour
     public Material textureMaterial;
     public Texture2D baseTex;
 
+
+    public Vector2 scroll = new Vector2(.5f, .25f);
+
+    public Vector2 offset = new Vector2(.5f, .5f);
     
-
-    public float scrollX = .5f;
-    public float scrollY = .5f;
-
-    private float offsetX = .5f;
-    private float offsetY = .5f;
-
 
     void Update()
     {
-        offsetX = scrollX * Time.time;
-        offsetY = scrollY * Time.time;
-        textureMaterial.mainTextureOffset = new Vector2(offsetX, offsetY);
+        offset += scroll * Time.deltaTime;
+        textureMaterial.mainTextureOffset = offset;
 
     }
 
@@ -42,13 +38,12 @@ public class TextureManager : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         if (EditorScroll) { ScrollTexture(); }
-        textureMaterial.mainTextureOffset = new Vector2(offsetX, offsetY);
+        textureMaterial.mainTextureOffset = offset;
     }
 
     private void ScrollTexture()
     {
-        offsetX = scrollX * Time.realtimeSinceStartup;
-        offsetY = scrollY * Time.realtimeSinceStartup;
+        offset = scroll * Time.realtimeSinceStartup;
 
     }
 
