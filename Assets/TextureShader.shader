@@ -4,8 +4,12 @@ Shader "Custom/TextureShader"
     {
         _Color ("Color", Color) = (1,1,1,1)
         _MainTex ("Main texture", 2D) = "white" {}
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
+        _LayerTex ("Layer Texture", 2D) = "white" {}
+        _MainWeight("Main Weight", Int) = 1
+        _LayerWeight("Layer Weight", Int) = 1
+        _Glossiness("Smoothness", Range(0,1)) = 0.5
+        _Metallic("Metallic", Range(0,1)) = 0.0
+        _totalWeight("Tot Weight", Int) = 1
     }
     SubShader
     {
@@ -21,6 +25,8 @@ Shader "Custom/TextureShader"
 
         sampler2D _MainTex;
 
+        sampler2D _textureArray[32];
+
         struct Input
         {
             float2 uv_MainTex;
@@ -29,6 +35,11 @@ Shader "Custom/TextureShader"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
+        half _MainWeight;
+        half _textureWeight[32];
+        half _totalWeight;
+        half _LayerWeight;
+        sampler2D _LayerTex;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -39,8 +50,10 @@ Shader "Custom/TextureShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
+            _totalWeight = _MainWeight + _LayerWeight;
+            _textureArray[0] = _LayerTex;
             // Albedo comes from a texture tinted by color
-            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color;
+            fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color * _MainWeight/_totalWeight + tex2D (_LayerTex, IN.uv_MainTex) * _Color * _LayerWeight/_totalWeight;
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
