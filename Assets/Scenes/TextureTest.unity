@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -464,7 +464,7 @@ MonoBehaviour:
   textureMaterial: {fileID: 2100000, guid: 0e17f61253876cd448eb1e19f70920e9, type: 2}
   baseTex: {fileID: 2800000, guid: 1fc92420c00d4094280293bcb0fa5f7c, type: 3}
   scroll: {x: 0.5, y: 0.25}
-  offset: {x: 95.57503, y: 47.787514}
+  offset: {x: 27.261074, y: 13.630537}
 --- !u!64 &1025401748
 MeshCollider:
   m_ObjectHideFlags: 0
