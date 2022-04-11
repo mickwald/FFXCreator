@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class ShaderScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+
+    public Shader shader;
+    public Material mat;
+    private int numberOfLayers;
+    public Texture2D[] textures;
+
+    private void OnValidate()
     {
-        
+        mat.shader = shader;
+        numberOfLayers = textures.Length;
+        mat.SetTexture("_MainTex", textures[0]);
+        for(int i = 1; i < numberOfLayers; i++)
+        {
+            mat.SetTexture("_textureArray", textures[i]);
+            mat.SetFloat("_totalWeight", 2);
+            Debug.Log("Updated " + (i - 1));
+            mat.SetFloat("_MainWeight", 1);
+            mat.SetFloat("_LayerWeight", 1);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
