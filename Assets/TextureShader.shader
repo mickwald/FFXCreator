@@ -10,6 +10,7 @@ Shader "Custom/TextureShader"
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
         _totalWeight("Tot Weight", Int) = 1
+        
     }
     SubShader
     {
@@ -23,9 +24,15 @@ Shader "Custom/TextureShader"
         // Use shader model 3.0 target, to get nicer looking lighting
         #pragma target 3.0
 
-        sampler2D _MainTex;
+        // Require 2D Array
+        #pragma require 2darray
 
-        sampler2D _textureArray[32];
+       
+            
+        sampler2D _MainTex;
+        sampler2D _LayerTex;
+
+        UNITY_DECLARE_TEX2DARRAY(_textureArray);
 
         struct Input
         {
@@ -39,7 +46,6 @@ Shader "Custom/TextureShader"
         half _textureWeight[32];
         half _totalWeight;
         half _LayerWeight;
-        sampler2D _LayerTex;
 
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
@@ -51,7 +57,6 @@ Shader "Custom/TextureShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             _totalWeight = _MainWeight + _LayerWeight;
-            _textureArray[0] = _LayerTex;
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * _Color * _MainWeight/_totalWeight + tex2D (_LayerTex, IN.uv_MainTex) * _Color * _LayerWeight/_totalWeight;
             o.Albedo = c.rgb;
