@@ -10,6 +10,7 @@ Shader "Custom/TextureShader"
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
         _totalWeight("Tot Weight", Int) = 1
+        _textureArray("Texture Array", 2DArray) = "white" {}
     }
     SubShader
     {
@@ -58,7 +59,8 @@ Shader "Custom/TextureShader"
             _totalWeight = _MainWeight + _LayerWeight;
             // Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D(_textureArray[1], IN.uv_MainTex);
-			fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex, 0))* _Color;
 			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color * _MainWeight / _totalWeight + tex2D(_textureArray[0], IN.uv_MainTex) * _Color * _LayerWeight / _totalWeight;
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
