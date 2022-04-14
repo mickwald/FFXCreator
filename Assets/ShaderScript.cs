@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class ShaderScript : MonoBehaviour
 {
@@ -10,21 +11,27 @@ public class ShaderScript : MonoBehaviour
     public int numberOfLayers = 1;
     public Texture2D tempMain;
     public Texture2DArray textures;
-    public int textureSize = 512;
+    public Vector2 scrollDirection = new Vector2(0f,0f);
 
-
+    private void OnDrawGizmos()
+    {
+        mat.SetFloat("_scrollTimer", Time.time);
+    }
 
     private void OnValidate()
     {
-        textures = new Texture2DArray(textureSize*2, textureSize, numberOfLayers, TextureFormat.RGBA32, true, true);
-        Color[] colors = new Color[textureSize*2*textureSize];
+        
+        textures = new Texture2DArray(tempMain.width, tempMain.height, numberOfLayers, TextureFormat.RGBA32, true, true);
+        Color[] colors = new Color[tempMain.width*tempMain.height];
         colors = tempMain.GetPixels();
-        Debug.Log("Fetched texture from tempMain");
         textures.SetPixels(colors, 0);
-        Debug.Log("Applied to 0 index in textures");
         textures.Apply();
-        Debug.Log("Applied to gpu");
         mat.shader = shader;
+        mat.SetFloat("_scrollTimer", Time.time);
+        float[] scrollDir = new float[2];
+        scrollDir[0] = scrollDirection.x;
+        scrollDir[1] = scrollDirection.y;
+        mat.SetFloatArray("_scrollDirection", scrollDir);
         mat.SetTexture("_textureArray", textures);
 
         //mat.SetTexture("_MainTex", tempMain);

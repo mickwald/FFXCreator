@@ -11,6 +11,7 @@ Shader "Custom/TextureShader"
         _Metallic("Metallic", Range(0,1)) = 0.0
         _totalWeight("Tot Weight", Int) = 1
         _textureArray("Texture Array", 2DArray) = "white" {}
+		_scrollTimer("Scroll Timer", Float) = 0.0
     }
     SubShader
     {
@@ -46,7 +47,8 @@ Shader "Custom/TextureShader"
         half _textureWeight[32];
         half _totalWeight;
         half _LayerWeight;
-
+		half _scrollTimer;
+		half2 _scrollDirection;
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
         // #pragma instancing_options assumeuniformscaling
@@ -60,7 +62,7 @@ Shader "Custom/TextureShader"
             // Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D(_textureArray[1], IN.uv_MainTex);
 			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex, 0))* _Color;
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x+(_scrollDirection.x*_scrollTimer), IN.uv_MainTex.y+(_scrollDirection.y*_scrollTimer), 0))* _Color;
 			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color * _MainWeight / _totalWeight + tex2D(_textureArray[0], IN.uv_MainTex) * _Color * _LayerWeight / _totalWeight;
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
