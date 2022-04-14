@@ -15,7 +15,7 @@ public class ShaderScript : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        mat.SetFloat("_scrollTimer", Time.time);
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
     }
 
     private void OnValidate()
@@ -26,12 +26,15 @@ public class ShaderScript : MonoBehaviour
         colors = tempMain.GetPixels();
         textures.SetPixels(colors, 0);
         textures.Apply();
-        mat.shader = shader;
-        mat.SetFloat("_scrollTimer", Time.time);
+        //mat.shader = shader;
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
         float[] scrollDir = new float[2];
         scrollDir[0] = scrollDirection.x;
         scrollDir[1] = scrollDirection.y;
+        mat.SetColor("_myColor", Color.green);
         mat.SetFloatArray("_scrollDirection", scrollDir);
+        mat.SetFloat("_scrollDirectionX", scrollDirection.x);
+        mat.SetFloat("_scrollDirectionY", scrollDirection.y);
         mat.SetTexture("_textureArray", textures);
 
         //mat.SetTexture("_MainTex", tempMain);
