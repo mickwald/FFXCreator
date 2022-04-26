@@ -10,10 +10,11 @@ public class ShaderScript : MonoBehaviour
     public Material mat;
     public int numberOfLayers = 1;
     public Texture2D tempMain;
+    public Texture2D tempSecond;
     public Texture2DArray textures;
     public Vector2 scrollDirection = new Vector2(0f,0f);
 
-    private void OnDrawGizmos()
+    private void NoOnDrawGizmos()
     {
         mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
     }
@@ -25,16 +26,15 @@ public class ShaderScript : MonoBehaviour
         Color[] colors = new Color[tempMain.width*tempMain.height];
         colors = tempMain.GetPixels();
         textures.SetPixels(colors, 0);
+        colors = tempSecond.GetPixels();
+        textures.SetPixels(colors, 1);
         textures.Apply();
-        //mat.shader = shader;
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
+        //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
         float[] scrollDir = new float[2];
         scrollDir[0] = scrollDirection.x;
         scrollDir[1] = scrollDirection.y;
         mat.SetColor("_myColor", Color.green);
         mat.SetFloatArray("_scrollDirection", scrollDir);
-        mat.SetFloat("_scrollDirectionX", scrollDirection.x);
-        mat.SetFloat("_scrollDirectionY", scrollDirection.y);
         mat.SetTexture("_textureArray", textures);
 
         //mat.SetTexture("_MainTex", tempMain);
@@ -46,6 +46,11 @@ public class ShaderScript : MonoBehaviour
             mat.SetFloat("_MainWeight", 1);
             mat.SetFloat("_LayerWeight", 1);
         }*/
+    }
+
+    private void NoUpdate()
+    {
+        mat.SetFloat("_scrollTimer", Time.time);
     }
 
 
