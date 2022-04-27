@@ -62,11 +62,17 @@ Shader "Custom/TextureShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             _totalWeight = _MainWeight + _LayerWeight;
+            // Calculate displacement
+            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer), 1));
+            fixed displacement = (d.r + d.g + d.b) / 3;
+            displacement -= 0.5;
+
             // Albedo comes from a texture tinted by color
 			//fixed4 c = tex2D(_textureArray[1], IN.uv_MainTex);
 			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
             //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + _scrollDirectionX, IN.uv_MainTex.y + _scrollDirectionY, 0)) * _Color;
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer), 0)) * _Color;
+            //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer), 0)) * _Color;
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + displacement, IN.uv_MainTex.y + displacement, 0)) * _Color;
             fixed4 a = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y, 1)) * _Color;
 			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color * _MainWeight / _totalWeight + tex2D(_textureArray[0], IN.uv_MainTex) * _Color * _LayerWeight / _totalWeight;
             o.Albedo = (c.rgb + a.rgb) /2;

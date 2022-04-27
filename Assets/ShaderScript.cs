@@ -14,7 +14,7 @@ public class ShaderScript : MonoBehaviour
     public Texture2DArray textures;
     public Vector2 scrollDirection = new Vector2(0f,0f);
 
-    private void NoOnDrawGizmos()
+    private void OnDrawGizmos()
     {
         mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
     }
@@ -48,10 +48,14 @@ public class ShaderScript : MonoBehaviour
         }*/
     }
 
-    private void NoUpdate()
+    private void Update()
     {
         mat.SetFloat("_scrollTimer", Time.time);
     }
 
+    public void Button()
+    {
+        Debug.Log("Test");
+    }
 
 }
