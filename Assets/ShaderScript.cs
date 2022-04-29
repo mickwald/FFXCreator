@@ -19,7 +19,7 @@ public class ShaderScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         if (mat == null) return;
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup%20f);
     }
 
     private void OnValidate()

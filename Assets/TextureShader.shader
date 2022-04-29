@@ -48,7 +48,7 @@ Shader "Custom/TextureShader"
         half _textureWeight[32];
         half _totalWeight;
         half _LayerWeight;
-		half _scrollTimer;
+		float _scrollTimer;
         float _scrollDirection[2];
         fixed _scrollDirectionX;
         fixed _scrollDirectionY;
@@ -63,7 +63,7 @@ Shader "Custom/TextureShader"
         {
             _totalWeight = _MainWeight + _LayerWeight;
             // Calculate displacement
-            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer), 1));
+            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer)), (IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer)), 1));
             fixed displacement = (d.r + d.g + d.b) / 3;
             displacement -= 0.5;
             //displacement = 0;
