@@ -5,7 +5,7 @@ using System.Collections;
 [CustomEditor(typeof(ShaderScript))]
 public class ShaderScript_Inspector : Editor
 {
-    int currentLayer = 0;
+    int currentLayer = 1;
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -21,13 +21,16 @@ public class ShaderScript_Inspector : Editor
         ssScript.mat = (Material)EditorGUILayout.ObjectField("Texture Shader", ssScript.mat, typeof(Material), false);
 
         //Script settings:
-        ssScript.numberOfLayers = (int)EditorGUILayout.IntField("Layer Limit (max 32):", ssScript.numberOfLayers);
+        //ssScript.numberOfLayers = (int)EditorGUILayout.IntField("Layer Limit (max 32):", ssScript.numberOfLayers);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Current layer:");
-        currentLayer = EditorGUILayout.IntSlider(currentLayer, 0, ssScript.numberOfLayers-1);
+        currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.numberOfLayers));
+        ssScript.currentLayer = currentLayer;
         EditorGUILayout.EndHorizontal();
-        //ssScript.GetCurrentTexture(currentLayer);
-        //ssScript.textures[currentLayer] = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer], typeof(Texture2D), true);
+        if (ssScript.textures != null)
+        {
+            ssScript.textures[currentLayer-1] = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
+        }
         EditorGUILayout.Space();
         if (GUILayout.Button("Click Me!"))
         {

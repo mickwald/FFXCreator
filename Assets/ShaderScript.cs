@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
@@ -9,21 +10,27 @@ public class ShaderScript : MonoBehaviour
 
     public Shader shader;
     public Material mat;
-    public int numberOfLayers = 1;
+    public int numberOfLayers = 32;
+    public int currentLayer;
     public Texture2D[] textures = new Texture2D[32];
     public Texture2D tempMain;
     public Texture2D tempSecond;
     public Texture2DArray textureArray;
     public Vector2 scrollDirection = new Vector2(0f,0f);
+    public float loopTime;
 
     private void OnDrawGizmos()
     {
         if (mat == null) return;
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup%20f);
+        loopTime = (float) GCD(scrollDirection.x, scrollDirection.y);
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1/loopTime));
     }
 
     private void OnValidate()
     {
+        mat.shader = shader;
+        //Upload new texture?
+        SetCurrentTexture(currentLayer);
         if (tempMain == null) return;
         textureArray = new Texture2DArray(tempMain.width, tempMain.height, numberOfLayers, TextureFormat.RGBA32, true, true);
         Color[] colors = new Color[tempMain.width*tempMain.height];
@@ -32,7 +39,7 @@ public class ShaderScript : MonoBehaviour
         textures[1] = tempSecond;
         textureArray.SetPixels(colors, 0);
         colors = tempSecond.GetPixels();
-        textureArray.SetPixels(colors, 1);
+        //textureArray.SetPixels(colors, 1);
         textureArray.Apply();
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
         float[] scrollDir = new float[2];
@@ -60,16 +67,17 @@ public class ShaderScript : MonoBehaviour
 
     public void Button()
     {
-        Debug.Log("Test");
+        Debug.Log("Button Pressed");
     }
 
     private void Reset()
     {
-        numberOfLayers = 3;
+        numberOfLayers = 1;
     }
 
     public void SetCurrentTexture(int layer)
     {
+        if (textures == null || textures[layer] == null) return;
         Color[] colors = new Color[textureArray.width * textureArray.height];
         colors = textures[layer].GetPixels();
         textureArray.SetPixels(colors, layer);
@@ -87,5 +95,22 @@ public class ShaderScript : MonoBehaviour
         textures[layer].SetPixels(colors);
         
         //currentTexture.SetPixels(colors);
+    }
+
+    private double GCD(double a, double b)
+    {
+        if(a < b)
+        {
+            return GCD(b, a);
+        }
+
+        if(Math.Abs(b) < 0.00001)
+        {
+            return a;
+        } else
+        {
+            return GCD(b, a - Math.Floor(a / b) * b);
+        }
+
     }
 }
