@@ -16,21 +16,21 @@ public class ShaderScript : MonoBehaviour
     public Texture2D tempMain;
     public Texture2D tempSecond;
     public Texture2DArray textureArray;
-    public Vector2 scrollDirection = new Vector2(0f,0f);
+    public Vector2 scrollDirection;
     public float loopTime;
 
     private void OnDrawGizmos()
     {
         if (mat == null) return;
         loopTime = (float) GCD(scrollDirection.x, scrollDirection.y);
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1/loopTime));
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime));
     }
 
     private void OnValidate()
     {
         mat.shader = shader;
         //Upload new texture?
-        SetCurrentTexture(currentLayer);
+        //SetCurrentTexture(currentLayer);
         if (tempMain == null) return;
         textureArray = new Texture2DArray(tempMain.width, tempMain.height, numberOfLayers, TextureFormat.RGBA32, true, true);
         Color[] colors = new Color[tempMain.width*tempMain.height];
@@ -67,12 +67,36 @@ public class ShaderScript : MonoBehaviour
 
     public void Button()
     {
+        if (textureArray == null)
+        {
+            if (textures[0] != null)
+            {
+                textureArray = new Texture2DArray(textures[0].width, textures[0].height, numberOfLayers, TextureFormat.RGBA32, true, true);
+            }
+            else
+            {
+                Debug.Log("Assign texture to layer 1");
+            }
+        }
+        Color[] colors = new Color[textureArray.width * textureArray.height];
+        for (int i = 0; i < textures.Length; i++)
+        {
+            if (textures[i] != null)
+            {
+                colors = textures[i].GetPixels();
+                textureArray.SetPixels(colors, i);
+            }
+        }
         Debug.Log("Button Pressed");
+        textureArray.Apply();
+        mat.SetTexture("_textureArray", textureArray);
+        
     }
 
     private void Reset()
     {
-        numberOfLayers = 1;
+        numberOfLayers = 32;
+        scrollDirection = new Vector2(0f, 0f);
     }
 
     public void SetCurrentTexture(int layer)

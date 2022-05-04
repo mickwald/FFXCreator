@@ -82,7 +82,7 @@ Material:
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
-    - _scrollTimer: 83236.73
+    - _scrollTimer: 13.221492
     - _totalWeight: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
