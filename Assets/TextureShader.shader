@@ -3,9 +3,7 @@ Shader "Custom/TextureShader"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _MainTex ("Main texture", 2D) = "white" {}
         //_LayerTex ("Layer Texture", 2D) = "white" {}
-        _MainWeight("Main Weight", Int) = 1
         _LayerWeight("Layer Weight", Int) = 1
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
@@ -13,8 +11,8 @@ Shader "Custom/TextureShader"
         _textureArray("Texture Array", 2DArray) = "white" {}
         _scrollTimer("Scroll Timer", Float) = 0.0
     }
-    SubShader
-    {
+        SubShader
+        {
         Tags { "RenderType"="Opaque" }
         LOD 200
 
@@ -30,24 +28,21 @@ Shader "Custom/TextureShader"
 
        
             
-        sampler2D _MainTex;
-        sampler2D _LayerTex;
 
         UNITY_DECLARE_TEX2DARRAY(_textureArray);
 
         struct Input
         {
-            float2 uv_MainTex;
+            float2 uv_textureArray;
         };
+        static const int NUMBER_OF_LAYERS = 32;
 
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
         fixed4 _myColor;
-        half _MainWeight;
-        half _textureWeight[32];
         half _totalWeight;
-        half _LayerWeight;
+        half _LayerWeight[NUMBER_OF_LAYERS];
 		float _scrollTimer;
         float _scrollDirection[2];
         fixed _scrollDirectionX;
@@ -61,27 +56,17 @@ Shader "Custom/TextureShader"
 
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
-            _totalWeight = _MainWeight + _LayerWeight;
             // Calculate displacement
-            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer)), (IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer)), 1));
+            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer)), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer)), 1));
             fixed displacement = (d.r + d.g + d.b) / 3;
             displacement -= 0.5;
             //displacement = 0;
-            // Albedo comes from a texture tinted by color
-			//fixed4 c = tex2D(_textureArray[1], IN.uv_MainTex);
-			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-            //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + _scrollDirectionX, IN.uv_MainTex.y + _scrollDirectionY, 0)) * _Color;
-            //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y + (_scrollDirection[1] * _scrollTimer), 0)) * _Color;
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + displacement, IN.uv_MainTex.y + displacement, 0)) * _Color;
-            //fixed4 a = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_MainTex.x + (_scrollDirection[0] * _scrollTimer), IN.uv_MainTex.y, 1)) * _Color;
-			//fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color * _MainWeight / _totalWeight + tex2D(_textureArray[0], IN.uv_MainTex) * _Color * _LayerWeight / _totalWeight;
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, 0)) * _Color;
             o.Albedo = c.rgb;
-            //o.Albedo = (c.rgb + a.rgb) /2;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
-            //o.Alpha = (c.a + a.a)/2;
         }
         ENDCG
     }

@@ -10,54 +10,54 @@ public class ShaderScript : MonoBehaviour
 
     public Shader shader;
     public Material mat;
-    public int numberOfLayers = 32;
+    private const int NUMBER_OF_LAYERS = 32;
+
     public int currentLayer;
-    public Texture2D[] textures = new Texture2D[32];
-    public Texture2D tempMain;
-    public Texture2D tempSecond;
+
+    //Texture arrays
+    public Texture2D[] textures = new Texture2D[NUMBER_OF_LAYERS];
     public Texture2DArray textureArray;
-    public Vector2 scrollDirection;
-    public float loopTime;
+
+    //Layer settings
+    public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
+    public bool[] scrollDirInverter = new bool[NUMBER_OF_LAYERS];
+    public float[] layerWeight = new float[NUMBER_OF_LAYERS];
+    public float[] loopTime = new float[NUMBER_OF_LAYERS];
+
 
     private void OnDrawGizmos()
     {
-        if (mat == null) return;
-        loopTime = (float) GCD(scrollDirection.x, scrollDirection.y);
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime));
+        if (shader == null || mat == null) return;
+        loopTime[0] = (float) GCD(scrollDirection[0].x, scrollDirection[0].y);      //TODO: Update to proper layer usage
+        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage
     }
 
     private void OnValidate()
     {
+        if (mat == null || shader == null) return;
         mat.shader = shader;
         //Upload new texture?
         //SetCurrentTexture(currentLayer);
-        if (tempMain == null) return;
-        textureArray = new Texture2DArray(tempMain.width, tempMain.height, numberOfLayers, TextureFormat.RGBA32, true, true);
-        Color[] colors = new Color[tempMain.width*tempMain.height];
-        colors = tempMain.GetPixels();
-        textures[0] = tempMain;
-        textures[1] = tempSecond;
-        textureArray.SetPixels(colors, 0);
-        colors = tempSecond.GetPixels();
-        //textureArray.SetPixels(colors, 1);
-        textureArray.Apply();
+        
+        if (textures == null) return;
+        if (textures[0] != null)
+        {
+            textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
+            Color[] colors = new Color[textures[0].width * textures[0].height];
+        }
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
         float[] scrollDir = new float[2];
-        scrollDir[0] = scrollDirection.x;
-        scrollDir[1] = scrollDirection.y;
+        scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
+        scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
         mat.SetColor("_myColor", Color.green);
         mat.SetFloatArray("_scrollDirection", scrollDir);
         mat.SetTexture("_textureArray", textureArray);
 
-        //mat.SetTexture("_MainTex", tempMain);
-       /* for(int i = 1; i < numberOfLayers; i++)
-        {
-            mat.SetTexture("_textureArray", textures[i]);
-            mat.SetFloat("_totalWeight", 2);
-            Debug.Log("Updated " + (i - 1));
-            mat.SetFloat("_MainWeight", 1);
-            mat.SetFloat("_LayerWeight", 1);
-        }*/
+    }
+
+    public int GetNumberOfLayers()
+    {
+        return NUMBER_OF_LAYERS;
     }
 
     private void Update()
@@ -71,11 +71,14 @@ public class ShaderScript : MonoBehaviour
         {
             if (textures[0] != null)
             {
-                textureArray = new Texture2DArray(textures[0].width, textures[0].height, numberOfLayers, TextureFormat.RGBA32, true, true);
+                //Debug.Log("Allocated Texture Array");
+                Debug.Log("Texture size: " + textures[0].width);
+                textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
             }
             else
             {
                 Debug.Log("Assign texture to layer 1");
+                return;
             }
         }
         Color[] colors = new Color[textureArray.width * textureArray.height];
@@ -87,16 +90,22 @@ public class ShaderScript : MonoBehaviour
                 textureArray.SetPixels(colors, i);
             }
         }
-        Debug.Log("Button Pressed");
+        //Debug.Log("Button Pressed");
         textureArray.Apply();
         mat.SetTexture("_textureArray", textureArray);
-        
+        float[] scrollDir = new float[2];
+        scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
+        scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
+        mat.SetFloatArray("_scrollDirection", scrollDir);
+
     }
 
     private void Reset()
-    {
-        numberOfLayers = 32;
-        scrollDirection = new Vector2(0f, 0f);
+    { 
+        scrollDirection = new Vector2[NUMBER_OF_LAYERS];
+        scrollDirInverter = new bool[NUMBER_OF_LAYERS];
+        layerWeight = new float[NUMBER_OF_LAYERS];
+        loopTime = new float[NUMBER_OF_LAYERS];
     }
 
     public void SetCurrentTexture(int layer)

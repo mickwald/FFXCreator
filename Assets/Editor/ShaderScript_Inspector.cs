@@ -6,6 +6,7 @@ using System.Collections;
 public class ShaderScript_Inspector : Editor
 {
     int currentLayer = 1;
+
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -22,16 +23,21 @@ public class ShaderScript_Inspector : Editor
 
         //Script settings:
         //ssScript.numberOfLayers = (int)EditorGUILayout.IntField("Layer Limit (max 32):", ssScript.numberOfLayers);
-        ssScript.tempSecond = (Texture2D)EditorGUILayout.ObjectField("2nd Texture", ssScript.tempSecond, typeof(Texture2D), true);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Current layer:");
-        currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.numberOfLayers));
+        currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.GetNumberOfLayers()));
         ssScript.currentLayer = currentLayer;
         EditorGUILayout.EndHorizontal();
         if (ssScript.textures != null)
         {
             ssScript.textures[currentLayer-1] = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
         }
+        ssScript.scrollDirection[currentLayer - 1] = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Loop time: ");
+        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString());
+        EditorGUILayout.EndHorizontal();
+        ssScript.layerWeight[currentLayer - 1] = EditorGUILayout.FloatField("Layer Weight",ssScript.layerWeight[currentLayer-1]);
         EditorGUILayout.Space();
         if (GUILayout.Button("Refresh shader"))
         {
