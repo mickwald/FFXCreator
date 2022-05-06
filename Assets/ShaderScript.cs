@@ -14,13 +14,15 @@ public class ShaderScript : MonoBehaviour
 
     public int currentLayer;
 
+    //Global settings
+    public Color color;
+
     //Texture arrays
     public Texture2D[] textures = new Texture2D[NUMBER_OF_LAYERS];
     public Texture2DArray textureArray;
 
     //Layer settings
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
-    public bool[] scrollDirInverter = new bool[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
 
@@ -72,7 +74,6 @@ public class ShaderScript : MonoBehaviour
             if (textures[0] != null)
             {
                 //Debug.Log("Allocated Texture Array");
-                Debug.Log("Texture size: " + textures[0].width);
                 textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
             }
             else
@@ -102,10 +103,11 @@ public class ShaderScript : MonoBehaviour
 
     private void Reset()
     { 
+        color = Color.white;
         scrollDirection = new Vector2[NUMBER_OF_LAYERS];
-        scrollDirInverter = new bool[NUMBER_OF_LAYERS];
         layerWeight = new float[NUMBER_OF_LAYERS];
         loopTime = new float[NUMBER_OF_LAYERS];
+        
     }
 
     public void SetCurrentTexture(int layer)
@@ -130,6 +132,7 @@ public class ShaderScript : MonoBehaviour
         //currentTexture.SetPixels(colors);
     }
 
+    //CRASHES ON NEGATIVE FLOATS!
     private double GCD(double a, double b)
     {
         if(a < b)

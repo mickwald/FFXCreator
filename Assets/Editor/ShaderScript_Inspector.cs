@@ -22,7 +22,10 @@ public class ShaderScript_Inspector : Editor
         ssScript.mat = (Material)EditorGUILayout.ObjectField("Material", ssScript.mat, typeof(Material), false);
 
         //Script settings:
-        //ssScript.numberOfLayers = (int)EditorGUILayout.IntField("Layer Limit (max 32):", ssScript.numberOfLayers);
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Color");
+        ssScript.color = EditorGUILayout.ColorField(ssScript.color);
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Current layer:");
         currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.GetNumberOfLayers()));
@@ -35,7 +38,8 @@ public class ShaderScript_Inspector : Editor
         ssScript.scrollDirection[currentLayer - 1] = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Loop time: ");
-        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString());
+        GUIStyle loopTimeStyle = new GUIStyle(GUI.skin.textField) { alignment = TextAnchor.MiddleCenter};
+        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString(),loopTimeStyle);
         EditorGUILayout.EndHorizontal();
         ssScript.layerWeight[currentLayer - 1] = EditorGUILayout.FloatField("Layer Weight",ssScript.layerWeight[currentLayer-1]);
         EditorGUILayout.Space();

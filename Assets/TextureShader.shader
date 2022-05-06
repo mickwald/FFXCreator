@@ -3,11 +3,9 @@ Shader "Custom/TextureShader"
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        //_LayerTex ("Layer Texture", 2D) = "white" {}
         _LayerWeight("Layer Weight", Int) = 1
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
-        _totalWeight("Tot Weight", Int) = 1
         _textureArray("Texture Array", 2DArray) = "white" {}
         _scrollTimer("Scroll Timer", Float) = 0.0
     }
@@ -41,8 +39,8 @@ Shader "Custom/TextureShader"
         half _Metallic;
         fixed4 _Color;
         fixed4 _myColor;
-        half _totalWeight;
-        half _LayerWeight[NUMBER_OF_LAYERS];
+        float _totalWeight;
+        half _layerWeight[NUMBER_OF_LAYERS];
 		float _scrollTimer;
         float _scrollDirection[2];
         fixed _scrollDirectionX;
