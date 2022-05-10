@@ -7,7 +7,6 @@ Shader "Custom/TextureShader"
         _Glossiness("Smoothness", Range(0,1)) = 0.5
         _Metallic("Metallic", Range(0,1)) = 0.0
         _textureArray("Texture Array", 2DArray) = "white" {}
-        _scrollTimer("Scroll Timer", Float) = 0.0
     }
         SubShader
         {
@@ -41,7 +40,7 @@ Shader "Custom/TextureShader"
         fixed4 _myColor;
         float _totalWeight;
         half _layerWeight[NUMBER_OF_LAYERS];
-		float _scrollTimer;
+		float _scrollTimer[NUMBER_OF_LAYERS];
         float _scrollDirection[2];
         fixed _scrollDirectionX;
         fixed _scrollDirectionY;
@@ -55,7 +54,7 @@ Shader "Custom/TextureShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             // Calculate displacement
-            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer)), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer)), 1));
+            fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer[0])), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer[0])), 1));
             fixed displacement = (d.r + d.g + d.b) / 3;
             displacement -= 0.5;
             //displacement = 0;

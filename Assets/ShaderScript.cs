@@ -25,13 +25,25 @@ public class ShaderScript : MonoBehaviour
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
+    public int[] displacementID = new int[NUMBER_OF_LAYERS];
+
 
 
     private void OnDrawGizmos()
     {
         if (shader == null || mat == null) return;
-        loopTime[0] = (float) GCD(scrollDirection[0].x, scrollDirection[0].y);      //TODO: Update to proper layer usage
-        mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage
+        float[] temp = new float[NUMBER_OF_LAYERS];
+        for(int i=0; i < NUMBER_OF_LAYERS; i++)
+        {
+            loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
+            if(loopTime[i] != 0)
+            {
+                temp[i] = 1 / loopTime[i];
+            }
+            temp[i] = Time.realtimeSinceStartup % temp[i];
+        }
+        mat.SetFloatArray("_scrollTimer", temp);
+        //mat.SetFloatArray("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage
     }
 
     private void OnValidate()
@@ -40,7 +52,12 @@ public class ShaderScript : MonoBehaviour
         mat.shader = shader;
         //Upload new texture?
         //SetCurrentTexture(currentLayer);
-        
+        float totalWeight = 0f;
+        for(int i = 0; i < NUMBER_OF_LAYERS; i++)
+        {
+            totalWeight += layerWeight[i];
+        }
+        mat.SetFloat("_totalWeight", totalWeight);
         if (textures == null) return;
         if (textures[0] != null)
         {
