@@ -37,10 +37,12 @@ Shader "Custom/TextureShader"
         half _Glossiness;
         half _Metallic;
         fixed4 _Color;
-        fixed4 _myColor;
         float _totalWeight;
         half _layerWeight[NUMBER_OF_LAYERS];
 		float _scrollTimer[NUMBER_OF_LAYERS];
+        //Displace layer [index] with data from index. 0 for no displacement layer, 1-32 for displacement from layer (1-32)-1)
+        int _displacementIndex[NUMBER_OF_LAYERS];
+        bool _displacementLayer[NUMBER_OF_LAYERS];
         float _scrollDirection[2];
         fixed _scrollDirectionX;
         fixed _scrollDirectionY;
