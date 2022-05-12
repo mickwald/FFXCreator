@@ -26,6 +26,8 @@ public class ShaderScript_Inspector : Editor
         EditorGUILayout.LabelField("Color");
         ssScript.color = EditorGUILayout.ColorField(ssScript.color);
         EditorGUILayout.EndHorizontal();
+
+        //Layer selection and Texture input
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Current layer:");
         currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.GetNumberOfLayers()));
@@ -35,11 +37,27 @@ public class ShaderScript_Inspector : Editor
         {
             ssScript.textures[currentLayer-1] = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
         }
+
+        //Texture Settings
+        //Displacement
+        if(ssScript.displacementID[currentLayer-1] == 0)
+        {
+            bool temp = false;
+            temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
+            if (temp) { ssScript.displacementID[currentLayer - 1] = 1; }
+        }
+        if(ssScript.displacementID[currentLayer-1] != 0)
+        {
+            bool temp = true;
+            temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
+            ssScript.displacementID[currentLayer - 1] = EditorGUILayout.IntSlider("Displace by what layer?", ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
+            if (!temp) { ssScript.displacementID[currentLayer - 1] = 0; }
+        }
+
         ssScript.scrollDirection[currentLayer - 1] = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Loop time: ");
-        GUIStyle loopTimeStyle = new GUIStyle(GUI.skin.textField) { alignment = TextAnchor.MiddleCenter};
-        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString(),loopTimeStyle);
+        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString());
         EditorGUILayout.EndHorizontal();
         ssScript.layerWeight[currentLayer - 1] = EditorGUILayout.FloatField("Layer Weight",ssScript.layerWeight[currentLayer-1]);
         EditorGUILayout.Space();
