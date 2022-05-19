@@ -114,6 +114,17 @@ public class ShaderScript : MonoBehaviour
         float[] scrollDir = new float[2];
         scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
         scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
+
+        float[] scrollDirX = new float[NUMBER_OF_LAYERS];
+        float[] scrollDirY = new float[NUMBER_OF_LAYERS];
+
+        for (int i = 0; i < NUMBER_OF_LAYERS; i++)
+        {
+            scrollDirX[i] = scrollDirection[i].x;
+            scrollDirY[i] = scrollDirection[i].y;
+        }
+        mat.SetFloatArray("_scrollDirectionX", scrollDirX);
+        mat.SetFloatArray("_scrollDirectionY", scrollDirY);
         mat.SetFloatArray("_scrollDirection", scrollDir);
 
     }

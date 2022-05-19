@@ -44,8 +44,10 @@ Shader "Custom/TextureShader"
         int _displacementIndex[NUMBER_OF_LAYERS];
         bool _displacementLayer[NUMBER_OF_LAYERS];
         float _scrollDirection[2];
-        fixed _scrollDirectionX;
-        fixed _scrollDirectionY;
+        fixed _scrollDirectionX[NUMBER_OF_LAYERS];
+        fixed _scrollDirectionY[NUMBER_OF_LAYERS];
+        fixed4 t[NUMBER_OF_LAYERS];
+
         // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
         // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
         // #pragma instancing_options assumeuniformscaling
@@ -56,16 +58,25 @@ Shader "Custom/TextureShader"
         void surf (Input IN, inout SurfaceOutputStandard o)
         {
             // Calculate displacement
+            int currentLayer = 0;
+            //t[0] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]))));
+            currentLayer = 1;
+            //t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]))));
+            
             fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer[0])), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer[0])), 1));
             fixed displacement = (d.r + d.g + d.b) / 3;
             displacement -= 0.5;
             //displacement = 0;
             fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, 0)) * _Color;
+
             o.Albedo = c.rgb;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
             o.Alpha = c.a;
+            
+            
+
         }
         ENDCG
     }
