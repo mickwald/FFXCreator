@@ -56,6 +56,7 @@ public class ShaderScript : MonoBehaviour
         for(int i = 0; i < NUMBER_OF_LAYERS; i++)
         {
             totalWeight += layerWeight[i];
+            displacementID[i] = 0;
         }
         mat.SetFloat("_totalWeight", totalWeight);
         if (textures == null) return;
@@ -84,7 +85,7 @@ public class ShaderScript : MonoBehaviour
         mat.SetFloat("_scrollTimer", Time.time);
     }
 
-    public void Button()
+    public void ReloadShader()
     {
         if (textureArray == null)
         {
@@ -161,20 +162,20 @@ public class ShaderScript : MonoBehaviour
     }
 
     //CRASHES ON NEGATIVE FLOATS!
-    private double GCD(double a, double b)
+    private double GCD(double aIn, double bIn)
     {
-        if(a < b)
-        {
-            return GCD(b, a);
-        }
+        int a = Math.Abs((int)(aIn * 1000.0));
+        int b = Math.Abs((int)(bIn * 1000.0));
+        int Remainder;
 
-        if(Math.Abs(b) < 0.00001)
+        while (b != 0)
         {
-            return a;
-        } else
-        {
-            return GCD(b, a - Math.Floor(a / b) * b);
+            Remainder = a % b;
+            a = b;
+            b = Remainder;
         }
+        return (double)(a/1000.0);
+
 
     }
 }

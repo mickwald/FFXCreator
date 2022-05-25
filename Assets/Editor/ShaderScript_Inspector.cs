@@ -33,9 +33,16 @@ public class ShaderScript_Inspector : Editor
         currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.GetNumberOfLayers()));
         ssScript.currentLayer = currentLayer;
         EditorGUILayout.EndHorizontal();
+        Texture2D texture = null;
+        EditorGUI.BeginChangeCheck();
         if (ssScript.textures != null)
         {
-            ssScript.textures[currentLayer-1] = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
+            texture = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
+        }
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.textures[currentLayer - 1] = texture;
+            ssScript.ReloadShader();
         }
 
         //Texture Settings
@@ -53,8 +60,13 @@ public class ShaderScript_Inspector : Editor
             ssScript.displacementID[currentLayer - 1] = EditorGUILayout.IntSlider("Displace by what layer?", ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
             if (!temp) { ssScript.displacementID[currentLayer - 1] = 0; }
         }
-
-        ssScript.scrollDirection[currentLayer - 1] = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
+        EditorGUI.BeginChangeCheck();
+        Vector2 scrollDirection = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.scrollDirection[currentLayer - 1] = scrollDirection;
+            ssScript.ReloadShader();
+        }
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Loop time: ");
         EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString());
@@ -63,7 +75,7 @@ public class ShaderScript_Inspector : Editor
         EditorGUILayout.Space();
         if (GUILayout.Button("Refresh shader"))
         {
-            ssScript.Button();
+            ssScript.ReloadShader();
         }
     }
 
