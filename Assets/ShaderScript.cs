@@ -45,7 +45,7 @@ public class ShaderScript : MonoBehaviour
         mat.SetFloatArray("_scrollTimer", temp);
         //mat.SetFloatArray("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage
     }
-
+    
     private void OnValidate()
     {
         if (mat == null || shader == null) return;
@@ -63,7 +63,7 @@ public class ShaderScript : MonoBehaviour
         if (textures[0] != null)
         {
             textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
-            Color[] colors = new Color[textures[0].width * textures[0].height];
+            //Color[] colors = new Color[textures[0].width * textures[0].height];
         }
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
         float[] scrollDir = new float[2];
@@ -80,9 +80,24 @@ public class ShaderScript : MonoBehaviour
         return NUMBER_OF_LAYERS;
     }
 
+    private void Start()
+    {
+        ReloadShader();
+    }
     private void Update()
     {
-        mat.SetFloat("_scrollTimer", Time.time);
+        if (shader == null || mat == null) return;
+        float[] temp = new float[NUMBER_OF_LAYERS];
+        for (int i = 0; i < NUMBER_OF_LAYERS; i++)
+        {
+            loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
+            if (loopTime[i] != 0)
+            {
+                temp[i] = 1 / loopTime[i];
+            }
+            temp[i] = Time.realtimeSinceStartup % temp[i];
+        }
+        mat.SetFloatArray("_scrollTimer", temp);
     }
 
     public void ReloadShader()
@@ -133,6 +148,7 @@ public class ShaderScript : MonoBehaviour
     private void Reset()
     { 
         color = Color.white;
+        textureArray = null;
         scrollDirection = new Vector2[NUMBER_OF_LAYERS];
         layerWeight = new float[NUMBER_OF_LAYERS];
         loopTime = new float[NUMBER_OF_LAYERS];
@@ -161,7 +177,7 @@ public class ShaderScript : MonoBehaviour
         //currentTexture.SetPixels(colors);
     }
 
-    //CRASHES ON NEGATIVE FLOATS!
+
     private double GCD(double aIn, double bIn)
     {
         int a = Math.Abs((int)(aIn * 1000.0));
