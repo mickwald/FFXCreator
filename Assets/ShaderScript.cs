@@ -20,6 +20,7 @@ public class ShaderScript : MonoBehaviour
     //Texture arrays
     public Texture2D[] textures = new Texture2D[NUMBER_OF_LAYERS];
     public Texture2DArray textureArray;
+    
 
     //Layer settings
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
@@ -63,6 +64,7 @@ public class ShaderScript : MonoBehaviour
         if (textures[0] != null)
         {
             textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
+            textureArray.hideFlags = HideFlags.DontSave;
             //Color[] colors = new Color[textures[0].width * textures[0].height];
         }
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
@@ -108,6 +110,7 @@ public class ShaderScript : MonoBehaviour
             {
                 //Debug.Log("Allocated Texture Array");
                 textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
+                textureArray.hideFlags = HideFlags.DontSave;
             }
             else
             {

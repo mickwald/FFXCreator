@@ -62,13 +62,15 @@ Shader "Custom/TextureShader"
             t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])),currentLayer));
             currentLayer = 1;
             t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])),currentLayer));
+            currentLayer = 1;
             fixed d_t = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             //fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer[0])), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer[0])), 1));
             //fixed displacement = (d.r + d.g + d.b) / 3;
             //displacement -= 0.5;
             fixed displacement = d_t;
             //displacement = 0;
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, 0)) * _Color;
+            currentLayer = 0;
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, currentLayer)) * _Color;
 
             //o.Albedo = c.rgb;
             //o.Albedo = t[1].rgb;
