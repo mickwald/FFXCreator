@@ -74,7 +74,7 @@ public class ShaderScript : MonoBehaviour
         mat.SetColor("_myColor", Color.green);
         mat.SetFloatArray("_scrollDirection", scrollDir);
         mat.SetTexture("_textureArray", textureArray);
-
+        ReloadShader();
     }
 
     public int GetNumberOfLayers()

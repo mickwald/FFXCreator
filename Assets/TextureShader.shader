@@ -70,12 +70,13 @@ Shader "Custom/TextureShader"
             fixed displacement = d_t;
             //displacement = 0;
             currentLayer = 0;
-            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, currentLayer)) * _Color;
+            fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displacement + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + displacement + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer)) * _Color;
+            //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, currentLayer)) * _Color;
 
-            //o.Albedo = c.rgb;
-            //o.Albedo = t[1].rgb;
+            o.Albedo = c.rgb;
+            //o.Albedo = t[0].rgb;
             //o.Albedo = (c.rgb + t[1].rgb) / 2;
-            o.Albedo = (t[0] + c) / 2;
+            //o.Albedo = (t[0] + c) / 2;
             // Metallic and smoothness come from slider variables
             o.Metallic = _Metallic;
             o.Smoothness = _Glossiness;
