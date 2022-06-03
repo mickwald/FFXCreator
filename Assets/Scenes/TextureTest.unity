@@ -404,11 +404,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
   mat: {fileID: 2100000, guid: e6abf0b6f9b81f645967e30851381319, type: 2}
-  currentLayer: 3
+  currentLayer: 1
   color: {r: 1, g: 1, b: 1, a: 1}
   textures:
   - {fileID: 2800000, guid: bfd25b49a0d0d1349ae4d4660b60c96a, type: 3}
-  - {fileID: 2800000, guid: 41d0ff40487e65040817c3a33d0fd061, type: 3}
+  - {fileID: 2800000, guid: bfd25b49a0d0d1349ae4d4660b60c96a, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -442,8 +442,8 @@ MonoBehaviour:
   textureArray: {fileID: 0}
   scrollDirection:
   - {x: 0.1, y: 0.2}
+  - {x: 0.05, y: 0.1}
   - {x: 0, y: 0}
-  - {x: -0.1, y: -0.2}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
@@ -508,8 +508,8 @@ MonoBehaviour:
   - 0
   loopTime:
   - 0.1
+  - 0.05
   - 0
-  - 0.1
   - 0
   - 0
   - 0

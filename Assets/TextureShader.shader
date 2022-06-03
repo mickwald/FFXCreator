@@ -66,8 +66,8 @@ Shader "Custom/TextureShader"
             fixed d_t = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             //fixed4 d = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirection[0] * _scrollTimer[0])), (IN.uv_textureArray.y + (_scrollDirection[1] * _scrollTimer[0])), 1));
             //fixed displacement = (d.r + d.g + d.b) / 3;
-            //displacement -= 0.5;
             fixed displacement = d_t;
+            displacement -= 0.5;
             //displacement = 0;
             currentLayer = 0;
             fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displacement + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + displacement + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer)) * _Color;

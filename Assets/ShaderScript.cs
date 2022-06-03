@@ -144,7 +144,7 @@ public class ShaderScript : MonoBehaviour
         }
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
-        mat.SetFloatArray("_scrollDirection", scrollDir);
+        //mat.SetFloatArray("_scrollDirection", scrollDir);
 
     }
 
