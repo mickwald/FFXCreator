@@ -26,7 +26,7 @@ public class ShaderScript : MonoBehaviour
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
-    public int[] displacementID = new int[NUMBER_OF_LAYERS];
+    public float[] displacementID = new float[NUMBER_OF_LAYERS];
 
 
 
@@ -57,7 +57,7 @@ public class ShaderScript : MonoBehaviour
         for(int i = 0; i < NUMBER_OF_LAYERS; i++)
         {
             totalWeight += layerWeight[i];
-            displacementID[i] = 0;
+            displacementID[i] = (float) 0;
         }
         mat.SetFloat("_totalWeight", totalWeight);
         if (textures == null) return;
@@ -144,6 +144,7 @@ public class ShaderScript : MonoBehaviour
         }
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
+        mat.SetFloatArray("_displacementIndex", displacementID);
         //mat.SetFloatArray("_scrollDirection", scrollDir);
 
     }

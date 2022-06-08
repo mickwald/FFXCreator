@@ -68,15 +68,15 @@ public class ShaderScript_Inspector : Editor
             bool temp = true;
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
             EditorGUI.BeginChangeCheck();
-            int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
+            int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", (int) ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
             if (EditorGUI.EndChangeCheck())
             {
-                ssScript.displacementID[currentLayer - 1] = displaceID;
+                ssScript.displacementID[currentLayer - 1] = (float) displaceID;
                 EditorUtility.SetDirty(ssScript);
             }
             if (!temp)
             {
-                ssScript.displacementID[currentLayer - 1] = 0;
+                ssScript.displacementID[currentLayer - 1] = (float) 0;
                 EditorUtility.SetDirty(ssScript);
             }
         }
