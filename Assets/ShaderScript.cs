@@ -53,13 +53,6 @@ public class ShaderScript : MonoBehaviour
         mat.shader = shader;
         //Upload new texture?
         //SetCurrentTexture(currentLayer);
-        float totalWeight = 0f;
-        for(int i = 0; i < NUMBER_OF_LAYERS; i++)
-        {
-            totalWeight += layerWeight[i];
-            displacementID[i] = (float) 0;
-        }
-        mat.SetFloat("_totalWeight", totalWeight);
         if (textures == null) return;
         if (textures[0] != null)
         {
@@ -68,6 +61,7 @@ public class ShaderScript : MonoBehaviour
             //Color[] colors = new Color[textures[0].width * textures[0].height];
         }
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
+
         float[] scrollDir = new float[2];
         scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
         scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
@@ -145,6 +139,13 @@ public class ShaderScript : MonoBehaviour
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
         mat.SetFloatArray("_displacementIndex", displacementID);
+        float totalWeight = 0f;
+        for (int i = 0; i < NUMBER_OF_LAYERS; i++)
+        {
+            totalWeight += layerWeight[i];
+        }
+        mat.SetFloat("_totalWeight", totalWeight);
+        mat.SetFloatArray("_layerWeight", layerWeight);
         //mat.SetFloatArray("_scrollDirection", scrollDir);
 
     }
