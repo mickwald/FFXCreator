@@ -37,11 +37,15 @@ public class ShaderScript : MonoBehaviour
         for(int i=0; i < NUMBER_OF_LAYERS; i++)
         {
             loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
-            if(loopTime[i] != 0)
+            if (loopTime[i] != 0)
             {
                 temp[i] = 1 / loopTime[i];
+                temp[i] = Time.realtimeSinceStartup % temp[i];
             }
-            temp[i] = Time.realtimeSinceStartup % temp[i];
+            else
+            {
+                temp[i] = 0;
+            }
         }
         mat.SetFloatArray("_scrollTimer", temp);
         //mat.SetFloatArray("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage

@@ -9,10 +9,10 @@ public class ShaderScript_Inspector : Editor
 
     public override void OnInspectorGUI()
     {
-        DrawDefaultInspector();
+        /*DrawDefaultInspector();
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("--------------------------------------------------------------------------");
-        EditorGUILayout.Space();
+        EditorGUILayout.Space();*/
 
         //Shader and material inputs:
         ShaderScript ssScript = (ShaderScript)target;
@@ -61,7 +61,12 @@ public class ShaderScript_Inspector : Editor
         {
             bool temp = false;
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
-            if (temp) { ssScript.displacementID[currentLayer - 1] = 1; }
+            if (temp)
+            {
+                ssScript.displacementID[currentLayer - 1] = 1;
+                ssScript.ReloadShader();
+                EditorUtility.SetDirty(ssScript);
+            }
         }
         if(ssScript.displacementID[currentLayer-1] != 0)
         {
@@ -72,11 +77,13 @@ public class ShaderScript_Inspector : Editor
             if (EditorGUI.EndChangeCheck())
             {
                 ssScript.displacementID[currentLayer - 1] = (float) displaceID;
+                ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
             if (!temp)
             {
                 ssScript.displacementID[currentLayer - 1] = (float) 0;
+                ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
         }
@@ -97,6 +104,7 @@ public class ShaderScript_Inspector : Editor
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.layerWeight[currentLayer - 1] = weight;
+            ssScript.ReloadShader();
             EditorUtility.SetDirty(ssScript);
         }
         EditorGUILayout.Space();
