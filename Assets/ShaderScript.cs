@@ -36,7 +36,7 @@ public class ShaderScript : MonoBehaviour
         float[] temp = new float[NUMBER_OF_LAYERS];
         for(int i=0; i < NUMBER_OF_LAYERS; i++)
         {
-            loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
+            //loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
             if (loopTime[i] != 0)
             {
                 temp[i] = 1 / loopTime[i];
@@ -187,20 +187,31 @@ public class ShaderScript : MonoBehaviour
     }
 
 
-    private double GCD(double aIn, double bIn)
+    public float GCD(float aIn, float bIn)
     {
-        int a = Math.Abs((int)(aIn * 1000.0));
-        int b = Math.Abs((int)(bIn * 1000.0));
+        aIn += 0.00002f;
+        bIn += 0.00002f;
+        int a = Math.Abs((int)(aIn * 10000f));
+        int b = Math.Abs((int)(bIn * 10000f));
         int Remainder;
-
+        //Debug.Log("A: " + a + ", B: " + b + "Input: a=" + aIn + ", b=" + bIn);
         while (b != 0)
         {
             Remainder = a % b;
             a = b;
             b = Remainder;
         }
-        return (double)(a/1000.0);
+        return a/10000f;
 
 
+    }
+
+    public void ApplyMaterial()
+    {
+        if (shader != null)
+        {
+            mat.shader = shader;
+        }
+        this.GetComponent<Renderer>().material = this.mat;
     }
 }

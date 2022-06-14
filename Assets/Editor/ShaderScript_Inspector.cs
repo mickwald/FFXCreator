@@ -23,14 +23,19 @@ public class ShaderScript_Inspector : Editor
         {
             ssScript.shader = shader;
         }
-        if (ssScript.mat == null) { EditorGUILayout.HelpBox("Please assign a dedicated material to the field below.", MessageType.Warning, true); }
-        EditorGUI.BeginChangeCheck();
-        Material mat = (Material)EditorGUILayout.ObjectField("Material", ssScript.mat, typeof(Material), false);
-        if (EditorGUI.EndChangeCheck())
-        {
-            ssScript.mat = mat;
-        }
 
+        if (ssScript.shader != null)
+        {
+            if (ssScript.mat == null) { EditorGUILayout.HelpBox("Please assign a dedicated material to the field below.", MessageType.Warning, true); }
+            EditorGUI.BeginChangeCheck();
+            Material mat = (Material)EditorGUILayout.ObjectField("Material", ssScript.mat, typeof(Material), false);
+            if (EditorGUI.EndChangeCheck())
+            {
+                ssScript.mat = mat;
+                ssScript.ApplyMaterial();
+
+            }
+        }
         //Script settings:
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Color");
@@ -92,6 +97,7 @@ public class ShaderScript_Inspector : Editor
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.scrollDirection[currentLayer - 1] = scrollDirection;
+            ssScript.loopTime[currentLayer - 1] = ssScript.GCD(scrollDirection.x, scrollDirection.y);
             ssScript.ReloadShader();
             EditorUtility.SetDirty(ssScript);
         }
