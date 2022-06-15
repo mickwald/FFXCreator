@@ -15,14 +15,14 @@ public class ShaderScript : MonoBehaviour
     public int currentLayer;
 
     //Global settings
-    public Color color;
 
     //Texture arrays
     public Texture2D[] textures = new Texture2D[NUMBER_OF_LAYERS];
     public Texture2DArray textureArray;
-    
+
 
     //Layer settings
+    public Color[] color = new Color[NUMBER_OF_LAYERS];
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
@@ -62,14 +62,13 @@ public class ShaderScript : MonoBehaviour
         {
             textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
             textureArray.hideFlags = HideFlags.DontSave;
-            //Color[] colors = new Color[textures[0].width * textures[0].height];
+            //color = new Color[NUMBER_OF_LAYERS];
         }
         //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
 
         float[] scrollDir = new float[2];
         scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
         scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
-        mat.SetColor("_myColor", Color.green);
         mat.SetFloatArray("_scrollDirection", scrollDir);
         mat.SetTexture("_textureArray", textureArray);
         ReloadShader();
@@ -140,6 +139,7 @@ public class ShaderScript : MonoBehaviour
             scrollDirX[i] = scrollDirection[i].x;
             scrollDirY[i] = scrollDirection[i].y;
         }
+        mat.SetColorArray("_color", color);
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
         mat.SetFloatArray("_displacementIndex", displacementID);
@@ -156,7 +156,7 @@ public class ShaderScript : MonoBehaviour
 
     private void Reset()
     { 
-        color = Color.white;
+        color = new Color[NUMBER_OF_LAYERS];
         textureArray = null;
         scrollDirection = new Vector2[NUMBER_OF_LAYERS];
         layerWeight = new float[NUMBER_OF_LAYERS];
@@ -189,8 +189,8 @@ public class ShaderScript : MonoBehaviour
 
     public float GCD(float aIn, float bIn)
     {
-        aIn += 0.00002f;
-        bIn += 0.00002f;
+        aIn += (aIn > 0) ? 0.00002f : -0.00002f;
+        bIn += (bIn > 0) ? 0.00002f : -0.00002f;
         int a = Math.Abs((int)(aIn * 10000f));
         int b = Math.Abs((int)(bIn * 10000f));
         int Remainder;

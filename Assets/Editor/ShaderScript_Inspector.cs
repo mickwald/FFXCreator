@@ -38,8 +38,6 @@ public class ShaderScript_Inspector : Editor
         }
         //Script settings:
         EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Color");
-        ssScript.color = EditorGUILayout.ColorField(ssScript.color);
         EditorGUILayout.EndHorizontal();
 
         //Layer selection and Texture input
@@ -57,9 +55,21 @@ public class ShaderScript_Inspector : Editor
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.textures[currentLayer - 1] = texture;
+            ssScript.layerWeight[currentLayer - 1] = 1;
+            ssScript.color[currentLayer - 1] = Color.white;
             ssScript.ReloadShader();
         }
-
+        EditorGUILayout.BeginHorizontal();
+        EditorGUILayout.LabelField("Color");
+        EditorGUI.BeginChangeCheck();
+        Color color = EditorGUILayout.ColorField(ssScript.color[currentLayer - 1]);
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.color[currentLayer - 1] = color;
+            ssScript.ReloadShader();
+            EditorUtility.SetDirty(ssScript); 
+        }
+        EditorGUILayout.EndHorizontal();
         //Texture Settings
         //Displacement
         if(ssScript.displacementID[currentLayer-1] == 0)
