@@ -6,6 +6,7 @@ using System.Collections;
 public class ShaderScript_Inspector : Editor
 {
     int currentLayer = 1;
+    float[] oldLayerWeight = new float[32];
 
     public override void OnInspectorGUI()
     {
@@ -78,26 +79,33 @@ public class ShaderScript_Inspector : Editor
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
             if (temp)
             {
+                oldLayerWeight[currentLayer - 1] = ssScript.layerWeight[currentLayer - 1];
                 ssScript.displacementID[currentLayer - 1] = 1;
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1]-1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
         }
-        if(ssScript.displacementID[currentLayer-1] != 0)
+        if (ssScript.displacementID[currentLayer - 1] != 0)
         {
             bool temp = true;
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
             EditorGUI.BeginChangeCheck();
-            int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", (int) ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
+            int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", (int)ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
             if (EditorGUI.EndChangeCheck())
             {
-                ssScript.displacementID[currentLayer - 1] = (float) displaceID;
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = oldLayerWeight[currentLayer - 1];
+                ssScript.displacementID[currentLayer - 1] = (float)displaceID;
+                oldLayerWeight[currentLayer - 1] = ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1];
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
             if (!temp)
             {
-                ssScript.displacementID[currentLayer - 1] = (float) 0;
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = oldLayerWeight[currentLayer - 1];
+                ssScript.displacementID[currentLayer - 1] = (float)0;
+                oldLayerWeight[currentLayer - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
