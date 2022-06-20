@@ -12,7 +12,7 @@ public class ShaderScript : MonoBehaviour
     public Material mat;
     private const int NUMBER_OF_LAYERS = 32;
 
-    public int currentLayer;
+    public int currentLayer=0;
 
     //Global settings
 

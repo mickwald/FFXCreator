@@ -5,7 +5,7 @@ using System.Collections;
 [CustomEditor(typeof(ShaderScript))]
 public class ShaderScript_Inspector : Editor
 {
-    int currentLayer = 1;
+    int currentLayer;
     float[] oldLayerWeight = new float[32];
 
     public override void OnInspectorGUI()
@@ -44,7 +44,7 @@ public class ShaderScript_Inspector : Editor
         //Layer selection and Texture input
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Current layer:");
-        currentLayer = EditorGUILayout.IntSlider(currentLayer, 1, (ssScript.GetNumberOfLayers()));
+        currentLayer = EditorGUILayout.IntSlider(ssScript.currentLayer, 1, (ssScript.GetNumberOfLayers()));
         ssScript.currentLayer = currentLayer;
         EditorGUILayout.EndHorizontal();
         EditorGUI.BeginChangeCheck();
@@ -127,6 +127,10 @@ public class ShaderScript_Inspector : Editor
         float weight = EditorGUILayout.FloatField("Layer Weight", ssScript.layerWeight[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
+            if(weight < 0)
+            {
+                weight = 0;
+            }
             ssScript.layerWeight[currentLayer - 1] = weight;
             ssScript.ReloadShader();
             EditorUtility.SetDirty(ssScript);
