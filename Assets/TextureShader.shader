@@ -40,6 +40,7 @@ Shader "Custom/TextureShader"
         float _totalWeight;
         half _layerWeight[NUMBER_OF_LAYERS];
 		float _scrollTimer[NUMBER_OF_LAYERS];
+        float _textureScale[NUMBER_OF_LAYERS];
         //Displace layer [index] with data from index. 0 for no displacement layer, 1-32 for displacement from layer (1-32)-1)
         float _displacementIndex[NUMBER_OF_LAYERS];
         bool _displacementLayer[NUMBER_OF_LAYERS];
@@ -60,131 +61,131 @@ Shader "Custom/TextureShader"
         {
             // Calculate displacement
             int currentLayer = 0;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 1;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 2;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 3;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 4;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 5;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 6;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 7;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 8;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 9;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 10;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 11;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 12;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 13;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 14;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 15;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 16;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 17;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 18;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 19;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 20;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 21;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 22;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 23;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 24;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 25;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 26;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 27;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 28;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 29;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 30;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 31;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             /*currentLayer = 1;
@@ -196,131 +197,131 @@ Shader "Custom/TextureShader"
             //displacement = 0;*/
             currentLayer = 0;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer]-1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 1;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 2;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 3;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 4;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 5;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 6;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 7;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 8;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 9;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 10;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 11;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 12;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 13;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 14;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 15;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 16;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 17;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 18;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 19;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 20;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 21;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 22;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 23;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 24;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 25;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 26;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 27;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 28;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 29;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 30;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             currentLayer = 31;
             if (_displacementIndex[currentLayer] != 0) {
-                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displace[_displacementIndex[currentLayer] - 1] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer));
+                t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), ((IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer]) + displace[_displacementIndex[currentLayer] - 1]) * _textureScale[currentLayer]), currentLayer));
             }
             //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + displacement + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer])), (IN.uv_textureArray.y + displacement + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])), currentLayer)) * _Color;
             //fixed4 c = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3(IN.uv_textureArray.x + displacement, IN.uv_textureArray.y + displacement, currentLayer)) * _Color;

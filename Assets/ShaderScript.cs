@@ -27,6 +27,7 @@ public class ShaderScript : MonoBehaviour
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
     public float[] displacementID = new float[NUMBER_OF_LAYERS];
+    public float[] textureScale = new float[NUMBER_OF_LAYERS];
 
 
 
@@ -40,7 +41,7 @@ public class ShaderScript : MonoBehaviour
             if (loopTime[i] != 0)
             {
                 temp[i] = 1 / loopTime[i];
-                temp[i] = Time.realtimeSinceStartup % temp[i];
+                temp[i] = Time.realtimeSinceStartup % (temp[i]/textureScale[i]);
             }
             else
             {
@@ -94,7 +95,7 @@ public class ShaderScript : MonoBehaviour
             {
                 temp[i] = 1 / loopTime[i];
             }
-            temp[i] = Time.realtimeSinceStartup % temp[i];
+            temp[i] = Time.time % (temp[i]/textureScale[i]);
         }
         mat.SetFloatArray("_scrollTimer", temp);
     }
@@ -123,13 +124,11 @@ public class ShaderScript : MonoBehaviour
                 colors = textures[i].GetPixels();
                 textureArray.SetPixels(colors, i);
             }
+
         }
         //Debug.Log("Button Pressed");
         textureArray.Apply();
         mat.SetTexture("_textureArray", textureArray);
-        float[] scrollDir = new float[2];
-        scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
-        scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
 
         float[] scrollDirX = new float[NUMBER_OF_LAYERS];
         float[] scrollDirY = new float[NUMBER_OF_LAYERS];
@@ -140,6 +139,7 @@ public class ShaderScript : MonoBehaviour
             scrollDirY[i] = scrollDirection[i].y;
         }
         mat.SetColorArray("_color", color);
+        mat.SetFloatArray("_textureScale", textureScale);
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
         mat.SetFloatArray("_displacementIndex", displacementID);

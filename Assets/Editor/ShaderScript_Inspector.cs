@@ -51,29 +51,39 @@ public class ShaderScript_Inspector : Editor
         Texture2D texture = null;
         if (ssScript.textures != null)
         {
-            texture = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer-1], typeof(Texture2D), true);
+            texture = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer - 1], typeof(Texture2D), true);
         }
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.textures[currentLayer - 1] = texture;
             ssScript.layerWeight[currentLayer - 1] = 1;
+            ssScript.textureScale[currentLayer - 1] = 1;
             ssScript.color[currentLayer - 1] = Color.white;
             ssScript.ReloadShader();
         }
-        EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField("Color");
+        //Texture Settings
         EditorGUI.BeginChangeCheck();
-        Color color = EditorGUILayout.ColorField(ssScript.color[currentLayer - 1]);
+        Color color = EditorGUILayout.ColorField("Color", ssScript.color[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.color[currentLayer - 1] = color;
             ssScript.ReloadShader();
-            EditorUtility.SetDirty(ssScript); 
+            EditorUtility.SetDirty(ssScript);
         }
-        EditorGUILayout.EndHorizontal();
-        //Texture Settings
+        EditorGUI.BeginChangeCheck();
+        float scale = EditorGUILayout.FloatField("Scale", ssScript.textureScale[currentLayer - 1]);
+        if (EditorGUI.EndChangeCheck())
+        {
+            if(scale < 0)
+            {
+                scale = 0;
+            }
+            ssScript.textureScale[currentLayer - 1] = scale;
+            ssScript.ReloadShader();
+            EditorUtility.SetDirty(ssScript);
+        }
         //Displacement
-        if(ssScript.displacementID[currentLayer-1] == 0)
+        if (ssScript.displacementID[currentLayer - 1] == 0)
         {
             bool temp = false;
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
@@ -81,7 +91,7 @@ public class ShaderScript_Inspector : Editor
             {
                 oldLayerWeight[currentLayer - 1] = ssScript.layerWeight[currentLayer - 1];
                 ssScript.displacementID[currentLayer - 1] = 1;
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1]-1] = 0;
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
@@ -121,13 +131,13 @@ public class ShaderScript_Inspector : Editor
         }
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Loop time: ");
-        EditorGUILayout.LabelField((1/ssScript.loopTime[currentLayer - 1]).ToString());
+        EditorGUILayout.LabelField((1 / ssScript.loopTime[currentLayer - 1]).ToString());
         EditorGUILayout.EndHorizontal();
         EditorGUI.BeginChangeCheck();
         float weight = EditorGUILayout.FloatField("Layer Weight", ssScript.layerWeight[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
-            if(weight < 0)
+            if (weight < 0)
             {
                 weight = 0;
             }
