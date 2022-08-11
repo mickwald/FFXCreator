@@ -150,6 +150,13 @@ public class ShaderScript_Inspector : Editor
         {
             ssScript.ReloadShader();
         }
+        Texture2D noiseTex = null;
+        noiseTex = (Texture2D)EditorGUILayout.ObjectField("Noise texture", ssScript.noiseTexture, typeof(Texture2D), true);
+        if(GUILayout.Button("Generate noise"))
+        {
+            noiseTex = ssScript.GenerateNoise();
+            ssScript.ReloadShader();
+        }
     }
 
 }

@@ -29,6 +29,8 @@ public class ShaderScript : MonoBehaviour
     public float[] displacementID = new float[NUMBER_OF_LAYERS];
     public float[] textureScale = new float[NUMBER_OF_LAYERS];
 
+    public Texture2D noiseTexture;
+
 
 
     private void OnDrawGizmos()
@@ -213,5 +215,25 @@ public class ShaderScript : MonoBehaviour
             mat.shader = shader;
         }
         this.GetComponent<Renderer>().material = this.mat;
+    }
+
+    public Texture2D GenerateNoise()
+    {
+        Texture2D temp = new Texture2D(512, 512, TextureFormat.RGBA32, true, true);
+        for (int i = 0; i < temp.width; i++)
+        {
+            for (int j = 0; j < temp.height; j++)
+            {
+                float greyScale = UnityEngine.Random.Range(0f, 1f);
+                //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
+                temp.SetPixel(i, j, new Color(greyScale,greyScale,greyScale));
+                //temp.SetPixel(i, j, Color.blue);
+
+            }
+        }
+        temp.Apply();
+        noiseTexture = temp;
+        textures[2] = temp;
+        return noiseTexture;
     }
 }
