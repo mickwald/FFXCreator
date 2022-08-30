@@ -47,6 +47,8 @@ Shader "Custom/TextureShader"
         //float _scrollDirection[2];
         fixed _scrollDirectionX[NUMBER_OF_LAYERS];
         fixed _scrollDirectionY[NUMBER_OF_LAYERS];
+        fixed _scrollOffsetX[NUMBER_OF_LAYERS];
+        fixed _scrollOffsetY[NUMBER_OF_LAYERS];
         fixed4 t[NUMBER_OF_LAYERS];
         fixed displace[NUMBER_OF_LAYERS];
 
@@ -61,7 +63,7 @@ Shader "Custom/TextureShader"
         {
             // Calculate displacement
             int currentLayer = 0;
-            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
+            t[currentLayer] = UNITY_SAMPLE_TEX2DARRAY(_textureArray, float3((IN.uv_textureArray.x + _scrollOffsetX[currentLayer] + (_scrollDirectionX[currentLayer] * _scrollTimer[currentLayer]))*_textureScale[currentLayer], (IN.uv_textureArray.y + _scrollOffsetY[currentLayer] + (_scrollDirectionY[currentLayer] * _scrollTimer[currentLayer])) * _textureScale[currentLayer], currentLayer));
             displace[currentLayer] = (t[currentLayer].r + t[currentLayer].g + t[currentLayer].b) / 3;
             displace[currentLayer] -= 0.5;
             currentLayer = 1;

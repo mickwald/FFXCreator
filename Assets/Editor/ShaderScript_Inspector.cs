@@ -8,6 +8,12 @@ public class ShaderScript_Inspector : Editor
     int currentLayer;
     float[] oldLayerWeight = new float[32];
 
+    // Noise vars
+
+    Vector2 offset = new Vector2();
+    float frequency;
+    int octaves;
+
     public override void OnInspectorGUI()
     {
         /*DrawDefaultInspector();
@@ -37,6 +43,16 @@ public class ShaderScript_Inspector : Editor
 
             }
         }
+
+
+        CreateLayerInspector(ssScript);
+
+        CreateNoiseInspector(ssScript);
+    }
+
+    private void CreateLayerInspector(ShaderScript ssScript)
+    {
+        
         //Script settings:
         EditorGUILayout.BeginHorizontal();
         EditorGUILayout.EndHorizontal();
@@ -52,6 +68,7 @@ public class ShaderScript_Inspector : Editor
         if (ssScript.textures != null)
         {
             texture = (Texture2D)EditorGUILayout.ObjectField("Texture", ssScript.textures[currentLayer - 1], typeof(Texture2D), true);
+
         }
         if (EditorGUI.EndChangeCheck())
         {
@@ -59,7 +76,12 @@ public class ShaderScript_Inspector : Editor
             ssScript.layerWeight[currentLayer - 1] = 1;
             ssScript.textureScale[currentLayer - 1] = 1;
             ssScript.color[currentLayer - 1] = Color.white;
+            string path = AssetDatabase.GetAssetPath(texture);
+            TextureImporter imp = (TextureImporter)TextureImporter.GetAtPath(path);
+            imp.isReadable = true;
+            imp.SaveAndReimport();
             ssScript.ReloadShader();
+            EditorUtility.SetDirty(ssScript);
         }
         //Texture Settings
         EditorGUI.BeginChangeCheck();
@@ -74,7 +96,7 @@ public class ShaderScript_Inspector : Editor
         float scale = EditorGUILayout.FloatField("Scale", ssScript.textureScale[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
-            if(scale < 0)
+            if (scale < 0)
             {
                 scale = 0;
             }
@@ -100,6 +122,7 @@ public class ShaderScript_Inspector : Editor
         {
             bool temp = true;
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
+            EditorGUILayout.BeginHorizontal();
             EditorGUI.BeginChangeCheck();
             int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", (int)ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
             if (EditorGUI.EndChangeCheck())
@@ -111,6 +134,12 @@ public class ShaderScript_Inspector : Editor
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
+            if (GUILayout.Button("Go to"))
+            {
+                ssScript.currentLayer = (int)ssScript.displacementID[currentLayer - 1];
+                EditorUtility.SetDirty(ssScript);
+            }
+            EditorGUILayout.EndHorizontal();
             if (!temp)
             {
                 ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = oldLayerWeight[currentLayer - 1];
@@ -129,10 +158,18 @@ public class ShaderScript_Inspector : Editor
             ssScript.ReloadShader();
             EditorUtility.SetDirty(ssScript);
         }
-        EditorGUILayout.BeginHorizontal();
+        EditorGUI.BeginChangeCheck();
+        Vector2 scrollOffset = (Vector2)EditorGUILayout.Vector2Field("Scroll Offset (layer 1 only atm)", ssScript.scrollOffset[currentLayer - 1]);
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.scrollOffset[currentLayer - 1] = scrollOffset;
+            ssScript.ReloadShader();
+            EditorUtility.SetDirty(ssScript);
+        }
+        /*EditorGUILayout.BeginHorizontal();
         EditorGUILayout.LabelField("Loop time: ");
         EditorGUILayout.LabelField((1 / ssScript.loopTime[currentLayer - 1]).ToString());
-        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndHorizontal();*/
         EditorGUI.BeginChangeCheck();
         float weight = EditorGUILayout.FloatField("Layer Weight", ssScript.layerWeight[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
@@ -150,13 +187,42 @@ public class ShaderScript_Inspector : Editor
         {
             ssScript.ReloadShader();
         }
+    }
+
+    private void CreateNoiseInspector(ShaderScript ssScript)
+    {
+
+        GUIStyle style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
+        EditorGUILayout.LabelField("~~~~ Noise ~~~~", style);
         Texture2D noiseTex = null;
         noiseTex = (Texture2D)EditorGUILayout.ObjectField("Noise texture", ssScript.noiseTexture, typeof(Texture2D), true);
-        if(GUILayout.Button("Generate noise"))
+        //Noise settings
+        offset = EditorGUILayout.Vector2Field("Offset", offset);
+        frequency = EditorGUILayout.FloatField("Frequency", frequency);
+        octaves = EditorGUILayout.IntField("Octaves", octaves);
+
+
+        //Buttons
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Apply to current layer"))
+        {
+            ssScript.ApplyNoiseToLayer(currentLayer - 1);
+            ssScript.ReloadShader();
+        }
+        if (GUILayout.Button("Save as PNG"))
+        {
+            ssScript.SaveNoiseTex();
+        }
+        if (GUILayout.Button("Generate Perlin noise"))
+        {
+            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency);
+            ssScript.ReloadShader();
+        }
+        if (GUILayout.Button("Generate noise"))
         {
             noiseTex = ssScript.GenerateNoise();
             ssScript.ReloadShader();
         }
+        EditorGUILayout.EndHorizontal();
     }
-
 }

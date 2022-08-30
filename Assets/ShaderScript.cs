@@ -24,13 +24,13 @@ public class ShaderScript : MonoBehaviour
     //Layer settings
     public Color[] color = new Color[NUMBER_OF_LAYERS];
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
+    public Vector2[] scrollOffset = new Vector2[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
     public float[] displacementID = new float[NUMBER_OF_LAYERS];
     public float[] textureScale = new float[NUMBER_OF_LAYERS];
 
     public Texture2D noiseTexture;
-
 
 
     private void OnDrawGizmos()
@@ -134,16 +134,22 @@ public class ShaderScript : MonoBehaviour
 
         float[] scrollDirX = new float[NUMBER_OF_LAYERS];
         float[] scrollDirY = new float[NUMBER_OF_LAYERS];
+        float[] scrollOffX = new float[NUMBER_OF_LAYERS];
+        float[] scrollOffY = new float[NUMBER_OF_LAYERS];
 
         for (int i = 0; i < NUMBER_OF_LAYERS; i++)
         {
             scrollDirX[i] = scrollDirection[i].x;
             scrollDirY[i] = scrollDirection[i].y;
+            scrollOffX[i] = scrollOffset[i].x;
+            scrollOffY[i] = scrollOffset[i].y;
         }
         mat.SetColorArray("_color", color);
         mat.SetFloatArray("_textureScale", textureScale);
         mat.SetFloatArray("_scrollDirectionX", scrollDirX);
         mat.SetFloatArray("_scrollDirectionY", scrollDirY);
+        mat.SetFloatArray("_scrollOffsetX", scrollOffX);
+        mat.SetFloatArray("_scrollOffsetY", scrollOffY);
         mat.SetFloatArray("_displacementIndex", displacementID);
         float totalWeight = 0f;
         for (int i = 0; i < NUMBER_OF_LAYERS; i++)
@@ -226,6 +232,40 @@ public class ShaderScript : MonoBehaviour
             {
                 float greyScale = UnityEngine.Random.Range(0f, 1f);
                 //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
+                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale));
+                //temp.SetPixel(i, j, Color.blue);
+
+            }
+        }
+        temp.Apply();
+        noiseTexture = temp;
+        return noiseTexture;
+    }
+
+    public Texture2D GeneratePerlinNoise(Vector2 offset, float frequency = 1f, int octaves = 1)
+    {
+        int width, height;
+        if (textures != null)
+        {
+            width = textures[0].width;
+            height = textures[0].height;
+        } else
+        {
+            width = height = 512;
+        }
+        Texture2D temp = new Texture2D(width, height, TextureFormat.RGBA32, true, true);
+        for (int i = 0; i < temp.width; i++)
+        {
+            float x = (float)i / (float)width;
+            x *= frequency;
+            for (int j = 0; j < height; j++)
+            {
+
+                float y = (float)j / (float)height;
+                y *= frequency;
+                //float greyScale = UnityEngine.Random.Range(0f, 1f);
+                float greyScale = Mathf.PerlinNoise(x+offset.x, y+offset.y);
+                //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
                 temp.SetPixel(i, j, new Color(greyScale,greyScale,greyScale));
                 //temp.SetPixel(i, j, Color.blue);
 
@@ -233,7 +273,33 @@ public class ShaderScript : MonoBehaviour
         }
         temp.Apply();
         noiseTexture = temp;
-        textures[2] = temp;
         return noiseTexture;
+    }
+
+    public Texture2D GeneratePerlinNoise()
+    {
+        return GeneratePerlinNoise(Vector2.zero);
+    }
+
+    public void SaveNoiseTex()
+    {
+        Texture2D saveTex = noiseTexture;
+        byte[] textureData = saveTex.EncodeToPNG();
+        string path = Application.dataPath + "/NoiseTextures/";
+        if (!System.IO.Directory.Exists(path))
+        {
+            Debug.Log("Tried creating Path");
+            System.IO.Directory.CreateDirectory(path);
+        }
+        string filePathName = path + "NoiseTexture_" + System.DateTime.Now.ToString("yyMMdd_HHmmss") + ".png";
+        System.IO.File.WriteAllBytes(filePathName, textureData);
+        System.IO.File.SetAttributes(filePathName, System.IO.File.GetAttributes(filePathName) & ~System.IO.FileAttributes.ReadOnly);
+        UnityEditor.AssetDatabase.Refresh();
+    }
+
+    public void ApplyNoiseToLayer(int targetLayer)
+    {
+        if (noiseTexture == null) return;
+        textures[targetLayer] = noiseTexture;
     }
 }
