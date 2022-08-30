@@ -17,6 +17,10 @@
 # Recordings can get excessive in size
 /[Rr]ecordings/
 
+# Project generated files
+/[Aa]ssets/[Nn]oiseTextures.meta
+/[Aa]ssets/[Nn]oiseTextures/*
+
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
