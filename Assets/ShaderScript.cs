@@ -256,6 +256,7 @@ public class ShaderScript : MonoBehaviour
         }
         temp.Apply();
         noiseTexture = temp;
+        noiseTexture.hideFlags = HideFlags.DontSave;
         return noiseTexture;
     }
 
@@ -295,7 +296,7 @@ public class ShaderScript : MonoBehaviour
         return noiseTexture;
     }
 
-    public void SaveNoiseTex()
+    public String SaveNoiseTex()
     {
         Texture2D saveTex = noiseTexture;
         byte[] textureData = saveTex.EncodeToPNG();
@@ -319,11 +320,24 @@ public class ShaderScript : MonoBehaviour
         System.IO.File.WriteAllBytes(filePathName, textureData);
         System.IO.File.SetAttributes(filePathName, System.IO.File.GetAttributes(filePathName) & ~System.IO.FileAttributes.ReadOnly);
         UnityEditor.AssetDatabase.Refresh();
+        string texturePath = filePathName;
+        string dataPath = Application.dataPath;
+        dataPath = dataPath.Replace("Assets", "");
+        texturePath = texturePath.Replace(dataPath, "");
+        TextureImporter imp = (TextureImporter)TextureImporter.GetAtPath(texturePath);
+        imp.isReadable = true;
+        imp.SaveAndReimport();
+        ReloadShader();
+        return filePathName;
     }
 
     public void ApplyNoiseToLayer(int targetLayer)
     {
         if (noiseTexture == null) return;
-        textures[targetLayer] = noiseTexture;
+        string texturePath = SaveNoiseTex();
+        string dataPath = Application.dataPath;
+        dataPath = dataPath.Replace("Assets", "");
+        texturePath = texturePath.Replace(dataPath, "");
+        textures[targetLayer] = (Texture2D) AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D));
     }
 }

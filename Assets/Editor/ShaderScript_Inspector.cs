@@ -196,6 +196,7 @@ public class ShaderScript_Inspector : Editor
         EditorGUILayout.LabelField("~~~~ Noise ~~~~", style);
         Texture2D noiseTex = null;
         noiseTex = (Texture2D)EditorGUILayout.ObjectField("Noise texture", ssScript.noiseTexture, typeof(Texture2D), true);
+        if(noiseTex != null) noiseTex.hideFlags = HideFlags.DontSave;
         //Noise settings
         offset = EditorGUILayout.Vector2Field("Offset", offset);
         frequency = EditorGUILayout.FloatField("Frequency", frequency);
