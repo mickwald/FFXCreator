@@ -32,6 +32,22 @@ public class ShaderScript : MonoBehaviour
 
     public Texture2D noiseTexture;
 
+    public struct GeneratedTextureData
+    {
+        public GeneratedTextureData(string type, Vector2 offset, float freq, int oct)
+        {
+            NoiseType = type;
+            Offset = offset;
+            frequency = freq;
+            octaves = oct;
+        }
+        public string NoiseType;
+        public Vector2 Offset;
+        public float frequency;
+        public int octaves;
+    }
+
+    GeneratedTextureData noiseTexData;
 
     private void OnDrawGizmos()
     {
@@ -43,7 +59,7 @@ public class ShaderScript : MonoBehaviour
             if (loopTime[i] != 0)
             {
                 temp[i] = 1 / loopTime[i];
-                temp[i] = Time.realtimeSinceStartup % (temp[i]/textureScale[i]);
+                temp[i] = (float)(Time.realtimeSinceStartupAsDouble % (double)(temp[i]/textureScale[i]));
             }
             else
             {
@@ -225,6 +241,7 @@ public class ShaderScript : MonoBehaviour
 
     public Texture2D GenerateNoise()
     {
+        noiseTexData = new GeneratedTextureData("Uniform", default, default,default);
         Texture2D temp = new Texture2D(512, 512, TextureFormat.RGBA32, true, true);
         for (int i = 0; i < temp.width; i++)
         {
@@ -242,8 +259,9 @@ public class ShaderScript : MonoBehaviour
         return noiseTexture;
     }
 
-    public Texture2D GeneratePerlinNoise(Vector2 offset, float frequency = 1f, int octaves = 1)
+    public Texture2D GeneratePerlinNoise(Vector2 offset = default, float frequency = 1f, int octaves = 1)
     {
+        noiseTexData = new GeneratedTextureData("Perlin", offset, frequency, octaves);
         int width, height;
         if (textures != null)
         {
@@ -257,28 +275,24 @@ public class ShaderScript : MonoBehaviour
         for (int i = 0; i < temp.width; i++)
         {
             float x = (float)i / (float)width;
-            x *= frequency;
             for (int j = 0; j < height; j++)
             {
-
                 float y = (float)j / (float)height;
-                y *= frequency;
-                //float greyScale = UnityEngine.Random.Range(0f, 1f);
-                float greyScale = Mathf.PerlinNoise(x+offset.x, y+offset.y);
+                float greyScale = 0;
+                for (int octave = 1; octave <= octaves; octave++)
+                {
+                    greyScale += Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave);
+                }
+                greyScale /= octaves;
+                //float greyScale = Mathf.PerlinNoise(x+offset.x, y+offset.y);
                 //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
-                temp.SetPixel(i, j, new Color(greyScale,greyScale,greyScale));
+                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale));
                 //temp.SetPixel(i, j, Color.blue);
-
             }
         }
         temp.Apply();
         noiseTexture = temp;
         return noiseTexture;
-    }
-
-    public Texture2D GeneratePerlinNoise()
-    {
-        return GeneratePerlinNoise(Vector2.zero);
     }
 
     public void SaveNoiseTex()
@@ -291,7 +305,17 @@ public class ShaderScript : MonoBehaviour
             Debug.Log("Tried creating Path");
             System.IO.Directory.CreateDirectory(path);
         }
-        string filePathName = path + "NoiseTexture_" + System.DateTime.Now.ToString("yyMMdd_HHmmss") + ".png";
+        string timestamp = System.DateTime.Now.ToString("yyMMdd_HHmmss");
+        string filePathName = path + noiseTexData.NoiseType + "Noise_";
+        if (noiseTexData.NoiseType == "Perlin")
+        {
+            filePathName += "off" + noiseTexData.Offset + "_freq" + noiseTexData.frequency + "_oct" + noiseTexData.octaves;
+        }
+        else
+        {
+            filePathName += timestamp;
+        }
+        filePathName += ".png";
         System.IO.File.WriteAllBytes(filePathName, textureData);
         System.IO.File.SetAttributes(filePathName, System.IO.File.GetAttributes(filePathName) & ~System.IO.FileAttributes.ReadOnly);
         UnityEditor.AssetDatabase.Refresh();

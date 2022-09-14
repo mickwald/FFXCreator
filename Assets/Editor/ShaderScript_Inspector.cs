@@ -73,7 +73,7 @@ public class ShaderScript_Inspector : Editor
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.textures[currentLayer - 1] = texture;
-            ssScript.layerWeight[currentLayer - 1] = 1;
+            ssScript.layerWeight[currentLayer - 1] = 1; //% label
             ssScript.textureScale[currentLayer - 1] = 1;
             ssScript.color[currentLayer - 1] = Color.white;
             string path = AssetDatabase.GetAssetPath(texture);
@@ -200,6 +200,7 @@ public class ShaderScript_Inspector : Editor
         offset = EditorGUILayout.Vector2Field("Offset", offset);
         frequency = EditorGUILayout.FloatField("Frequency", frequency);
         octaves = EditorGUILayout.IntField("Octaves", octaves);
+        if (octaves < 1) octaves = 1;
 
 
         //Buttons
@@ -215,7 +216,7 @@ public class ShaderScript_Inspector : Editor
         }
         if (GUILayout.Button("Generate Perlin noise"))
         {
-            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency);
+            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency, octaves);
             ssScript.ReloadShader();
         }
         if (GUILayout.Button("Generate noise"))
