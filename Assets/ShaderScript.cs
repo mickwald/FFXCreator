@@ -34,17 +34,19 @@ public class ShaderScript : MonoBehaviour
 
     public struct GeneratedTextureData
     {
-        public GeneratedTextureData(string type, Vector2 offset, float freq, int oct)
+        public GeneratedTextureData(string type, Vector2 offset, float freq, int oct, float af)
         {
             NoiseType = type;
             Offset = offset;
             frequency = freq;
             octaves = oct;
+            amplitudeFalloff = af;
         }
         public string NoiseType;
         public Vector2 Offset;
         public float frequency;
         public int octaves;
+        public float amplitudeFalloff;
     }
 
     GeneratedTextureData noiseTexData;
@@ -213,10 +215,12 @@ public class ShaderScript : MonoBehaviour
 
     public float GCD(float aIn, float bIn)
     {
-        aIn += (aIn > 0) ? 0.00002f : -0.00002f;
-        bIn += (bIn > 0) ? 0.00002f : -0.00002f;
-        int a = Math.Abs((int)(aIn * 10000f));
-        int b = Math.Abs((int)(bIn * 10000f));
+        float intFactor = 100000f;
+        float epsilon = 0.00002f;
+        aIn += (aIn > 0) ? epsilon : -epsilon;
+        bIn += (bIn > 0) ? epsilon : -epsilon;
+        int a = Math.Abs((int)(aIn * intFactor));
+        int b = Math.Abs((int)(bIn * intFactor));
         int Remainder;
         //Debug.Log("A: " + a + ", B: " + b + "Input: a=" + aIn + ", b=" + bIn);
         while (b != 0)
@@ -225,7 +229,7 @@ public class ShaderScript : MonoBehaviour
             a = b;
             b = Remainder;
         }
-        return a/10000f;
+        return a/intFactor;
 
 
     }
@@ -241,7 +245,7 @@ public class ShaderScript : MonoBehaviour
 
     public Texture2D GenerateNoise()
     {
-        noiseTexData = new GeneratedTextureData("Uniform", default, default,default);
+        noiseTexData = new GeneratedTextureData("Uniform",default, default,default,default);
         Texture2D temp = new Texture2D(512, 512, TextureFormat.RGBA32, true, true);
         for (int i = 0; i < temp.width; i++)
         {
@@ -260,9 +264,9 @@ public class ShaderScript : MonoBehaviour
         return noiseTexture;
     }
 
-    public Texture2D GeneratePerlinNoise(Vector2 offset = default, float frequency = 1f, int octaves = 1)
+    public Texture2D GeneratePerlinNoise(Vector2 offset = default, float frequency = 1f, int octaves = 1, float amplitudeFalloff = 1f)
     {
-        noiseTexData = new GeneratedTextureData("Perlin", offset, frequency, octaves);
+        noiseTexData = new GeneratedTextureData("Perlin", offset, frequency, octaves, amplitudeFalloff);
         int width, height;
         if (textures != null)
         {
@@ -280,11 +284,18 @@ public class ShaderScript : MonoBehaviour
             {
                 float y = (float)j / (float)height;
                 float greyScale = 0;
+                float powSum = 0f;
                 for (int octave = 1; octave <= octaves; octave++)
                 {
-                    greyScale += Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave);
+                    //greyScale = greyScale + (amplitudeFalloff * 1 - greyScale) / octave;
+                    float amplitudePow = (float)Math.Pow(amplitudeFalloff, octave - 1);
+                    powSum += amplitudePow;
+                    //if (i == 200 && j == 200) Debug.Log(((amplitudeFalloff * 1) - amplitudeFalloff * greyScale) / (powSum));
+                    //if (i == 200 && j == 200) Debug.Log("PowSum: " + powSum);
+                    greyScale += ((amplitudePow * Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave)) - amplitudeFalloff*greyScale) / (powSum);
+                    if (i == 200 && j == 200) Debug.Log("greyScale: " + greyScale);
+                    //greyScale += ((((octave == 1) ? 1 : amplitudeFalloff) * Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave)) - greyScale) / powSum;
                 }
-                greyScale /= octaves;
                 //float greyScale = Mathf.PerlinNoise(x+offset.x, y+offset.y);
                 //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
                 temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale));
@@ -310,7 +321,7 @@ public class ShaderScript : MonoBehaviour
         string filePathName = path + noiseTexData.NoiseType + "Noise_";
         if (noiseTexData.NoiseType == "Perlin")
         {
-            filePathName += "off" + noiseTexData.Offset + "_freq" + noiseTexData.frequency + "_oct" + noiseTexData.octaves;
+            filePathName += "off" + noiseTexData.Offset + "_freq" + noiseTexData.frequency + "_oct" + noiseTexData.octaves + "_af" + noiseTexData.amplitudeFalloff;
         }
         else
         {

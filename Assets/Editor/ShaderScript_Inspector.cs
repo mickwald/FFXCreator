@@ -13,6 +13,7 @@ public class ShaderScript_Inspector : Editor
     Vector2 offset = new Vector2();
     float frequency;
     int octaves;
+    float amplitudeFalloff;
 
     public override void OnInspectorGUI()
     {
@@ -201,6 +202,7 @@ public class ShaderScript_Inspector : Editor
         offset = EditorGUILayout.Vector2Field("Offset", offset);
         frequency = EditorGUILayout.FloatField("Frequency", frequency);
         octaves = EditorGUILayout.IntField("Octaves", octaves);
+        amplitudeFalloff = EditorGUILayout.FloatField("Amplitude Falloff", amplitudeFalloff);
         if (octaves < 1) octaves = 1;
 
 
@@ -217,7 +219,7 @@ public class ShaderScript_Inspector : Editor
         }
         if (GUILayout.Button("Generate Perlin noise"))
         {
-            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency, octaves);
+            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency, octaves, amplitudeFalloff);
             ssScript.ReloadShader();
         }
         if (GUILayout.Button("Generate noise"))
