@@ -6,14 +6,9 @@ using System.Collections;
 public class ShaderScript_Inspector : Editor
 {
     int currentLayer;
-    float[] oldLayerWeight = new float[32];
-
+    bool hideTextureInspector = false;
+    bool hideNoiseInspector = false;
     // Noise vars
-
-    Vector2 offset = new Vector2();
-    float frequency;
-    int octaves;
-    float amplitudeFalloff;
 
     public override void OnInspectorGUI()
     {
@@ -24,16 +19,28 @@ public class ShaderScript_Inspector : Editor
 
         //Shader and material inputs:
         ShaderScript ssScript = (ShaderScript)target;
-        if (ssScript.shader == null) { EditorGUILayout.HelpBox("Please assign the Texture Shader to the field below.", MessageType.Warning, true); }
-        EditorGUI.BeginChangeCheck();
-        Shader shader = (Shader)EditorGUILayout.ObjectField("Texture Shader", ssScript.shader, typeof(Shader), false);
-        if (EditorGUI.EndChangeCheck())
+        if(ssScript.shader == null)
         {
-            ssScript.shader = shader;
+            Shader textureShader = (Shader)AssetDatabase.LoadAssetAtPath("Assets/TextureShader.shader", typeof(Shader));
+            ssScript.shader = textureShader;
         }
 
         if (ssScript.shader != null)
         {
+            if (ssScript.mat == null)
+            {
+                Material material = new Material(ssScript.shader);
+                string path = Application.dataPath + "/ShaderScriptMaterials/";
+                if (!System.IO.Directory.Exists(path))
+                {
+                    Debug.Log("Tried creating Path");
+                    System.IO.Directory.CreateDirectory(path);
+                }
+                string filename = "Assets/ShaderScriptMaterials/" + ssScript.gameObject.name + ".mat";
+                AssetDatabase.CreateAsset(material, filename);
+                ssScript.mat = (Material)AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(material), typeof(Material));
+                ssScript.ApplyMaterial();
+            }
             if (ssScript.mat == null) { EditorGUILayout.HelpBox("Please assign a dedicated material to the field below.", MessageType.Warning, true); }
             EditorGUI.BeginChangeCheck();
             Material mat = (Material)EditorGUILayout.ObjectField("Material", ssScript.mat, typeof(Material), false);
@@ -45,10 +52,14 @@ public class ShaderScript_Inspector : Editor
             }
         }
 
+        hideTextureInspector = EditorGUILayout.Toggle("Hide Texture section", hideTextureInspector);
 
-        CreateLayerInspector(ssScript);
 
-        CreateNoiseInspector(ssScript);
+        if (!hideTextureInspector) CreateLayerInspector(ssScript);
+
+        hideNoiseInspector = EditorGUILayout.Toggle("Hide Noise section", hideNoiseInspector);
+
+        if (!hideNoiseInspector) CreateNoiseInspector(ssScript);
     }
 
     private void CreateLayerInspector(ShaderScript ssScript)
@@ -112,9 +123,9 @@ public class ShaderScript_Inspector : Editor
             temp = EditorGUILayout.Toggle("Should this texture be displaced?", temp);
             if (temp)
             {
-                oldLayerWeight[currentLayer - 1] = ssScript.layerWeight[currentLayer - 1];
                 ssScript.displacementID[currentLayer - 1] = 1;
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
+                //ssScript.oldLayerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.layerWeight[currentLayer - 1];
+                //ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
@@ -128,10 +139,10 @@ public class ShaderScript_Inspector : Editor
             int displaceID = EditorGUILayout.IntSlider("Displace by what layer?", (int)ssScript.displacementID[currentLayer - 1], 1, ssScript.GetNumberOfLayers());
             if (EditorGUI.EndChangeCheck())
             {
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = oldLayerWeight[currentLayer - 1];
+                //ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.oldLayerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1];
                 ssScript.displacementID[currentLayer - 1] = (float)displaceID;
-                oldLayerWeight[currentLayer - 1] = ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1];
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
+                //ssScript.oldLayerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1];
+                //ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
@@ -143,15 +154,15 @@ public class ShaderScript_Inspector : Editor
             EditorGUILayout.EndHorizontal();
             if (!temp)
             {
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = oldLayerWeight[currentLayer - 1];
+                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.oldLayerWeight[currentLayer - 1];
                 ssScript.displacementID[currentLayer - 1] = (float)0;
-                oldLayerWeight[currentLayer - 1] = 0;
+                ssScript.oldLayerWeight[currentLayer - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
         }
         EditorGUI.BeginChangeCheck();
-        Vector2 scrollDirection = (Vector2)EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
+        Vector2 scrollDirection = EditorGUILayout.Vector2Field("Scroll Direction", ssScript.scrollDirection[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.scrollDirection[currentLayer - 1] = scrollDirection;
@@ -160,7 +171,7 @@ public class ShaderScript_Inspector : Editor
             EditorUtility.SetDirty(ssScript);
         }
         EditorGUI.BeginChangeCheck();
-        Vector2 scrollOffset = (Vector2)EditorGUILayout.Vector2Field("Scroll Offset (layer 1 only atm)", ssScript.scrollOffset[currentLayer - 1]);
+        Vector2 scrollOffset = EditorGUILayout.Vector2Field("Scroll Offset", ssScript.scrollOffset[currentLayer - 1]);
         if (EditorGUI.EndChangeCheck())
         {
             ssScript.scrollOffset[currentLayer - 1] = scrollOffset;
@@ -184,26 +195,34 @@ public class ShaderScript_Inspector : Editor
             EditorUtility.SetDirty(ssScript);
         }
         EditorGUILayout.Space();
-        if (GUILayout.Button("Refresh shader"))
+        /*if (GUILayout.Button("Refresh shader"))
         {
             ssScript.ReloadShader();
-        }
+        }*/
     }
 
     private void CreateNoiseInspector(ShaderScript ssScript)
     {
 
         GUIStyle style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
-        EditorGUILayout.LabelField("~~~~ Noise ~~~~", style);
-        Texture2D noiseTex = null;
+        EditorGUILayout.LabelField("~~~~ Noise Generation ~~~~", style);
+        Texture2D noiseTex;
         noiseTex = (Texture2D)EditorGUILayout.ObjectField("Noise texture", ssScript.noiseTexture, typeof(Texture2D), true);
         if(noiseTex != null) noiseTex.hideFlags = HideFlags.DontSave;
-        //Noise settings
-        offset = EditorGUILayout.Vector2Field("Offset", offset);
-        frequency = EditorGUILayout.FloatField("Frequency", frequency);
-        octaves = EditorGUILayout.IntField("Octaves", octaves);
-        amplitudeFalloff = EditorGUILayout.FloatField("Amplitude Falloff", amplitudeFalloff);
-        if (octaves < 1) octaves = 1;
+
+        ssScript.noiseData.NoiseType = (ShaderScript.NoiseType)EditorGUILayout.EnumPopup("NoiseType", ssScript.noiseData.NoiseType);
+
+        switch (ssScript.noiseData.NoiseType)
+        {
+            case ShaderScript.NoiseType.PERLIN:
+                CreatePerlinSettings(ssScript);
+                break;
+            case ShaderScript.NoiseType.UNIFORM:
+                CreateUniformSettings(ssScript);
+                break;
+            default:
+                break;
+        }
 
 
         //Buttons
@@ -217,16 +236,52 @@ public class ShaderScript_Inspector : Editor
         {
             ssScript.SaveNoiseTex();
         }
-        if (GUILayout.Button("Generate Perlin noise"))
-        {
-            noiseTex = ssScript.GeneratePerlinNoise(offset, frequency, octaves, amplitudeFalloff);
-            ssScript.ReloadShader();
-        }
         if (GUILayout.Button("Generate noise"))
         {
-            noiseTex = ssScript.GenerateNoise();
+            ssScript.GenerateNoise();
             ssScript.ReloadShader();
         }
         EditorGUILayout.EndHorizontal();
+    }
+
+    private void CreatePerlinSettings(ShaderScript ssScript)
+    {
+        //Noise settings
+        ssScript.noiseData.offset = EditorGUILayout.Vector2Field("Offset", ssScript.noiseData.offset);
+        GUIContent freqTooltip = new GUIContent("Frequency", "Base frequency used for noise generation. Higher frequencies gives more detail while lower frequencies make for smoother effects.");
+        GUIContent ampFallTooltip = new GUIContent("Amplitude Falloff", "How much the amplitude changes for each octave.\n1 for no change, less than 1 makes each octave less important the previous one, larger than one makes higher frequencies more important.");
+        GUIContent contTooltip = new GUIContent("Contrast", "Contrast for the noise texture. (0-1)\n 0 results in a flat grey image while 1 gives full nosie effect.");
+        GUIContent alphaTooltip = new GUIContent("Generate Alpha", "If on, sets alpha to be the same value as the greyscale.\n If off, noisetexture will be fully opaque.");
+        EditorGUI.BeginChangeCheck();
+        float freq = EditorGUILayout.FloatField(freqTooltip, ssScript.noiseData.frequency);
+        int oct = EditorGUILayout.IntField("Octaves", ssScript.noiseData.octaves);
+        float ampFalloff = EditorGUILayout.FloatField(ampFallTooltip, ssScript.noiseData.amplitudeFalloff);
+        float contrast = EditorGUILayout.FloatField(contTooltip, ssScript.noiseData.contrast);
+        bool generateAlpha = EditorGUILayout.Toggle(alphaTooltip, ssScript.noiseData.generateAlpha);
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.noiseData.frequency = freq;
+            ssScript.noiseData.octaves = oct;
+            ssScript.noiseData.amplitudeFalloff = ampFalloff;
+            ssScript.noiseData.contrast = contrast;
+            ssScript.noiseData.generateAlpha = generateAlpha;
+            if (ssScript.noiseData.contrast < 0) ssScript.noiseData.contrast = 0;
+            if (ssScript.noiseData.contrast > 1f) ssScript.noiseData.contrast = 1f;
+            if (ssScript.noiseData.octaves < 1) ssScript.noiseData.octaves = 1;
+            EditorUtility.SetDirty(ssScript);
+        }
+    }
+
+    private void CreateUniformSettings(ShaderScript ssScript)
+    {
+        EditorGUI.BeginChangeCheck();
+        float contrast = EditorGUILayout.FloatField("Contrast", ssScript.noiseData.contrast);
+        if (EditorGUI.EndChangeCheck())
+        {
+            ssScript.noiseData.contrast = contrast;
+            if (ssScript.noiseData.contrast < 0) ssScript.noiseData.contrast = 0;
+            if (ssScript.noiseData.contrast > 1f) ssScript.noiseData.contrast = 1f;
+            EditorUtility.SetDirty(ssScript);
+        }
     }
 }

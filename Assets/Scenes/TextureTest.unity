@@ -160,7 +160,7 @@ MonoBehaviour:
   currentLayer: 1
   textures:
   - {fileID: 2800000, guid: 41d0ff40487e65040817c3a33d0fd061, type: 3}
-  - {fileID: 0}
+  - {fileID: 2800000, guid: bfd25b49a0d0d1349ae4d4660b60c96a, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -194,7 +194,7 @@ MonoBehaviour:
   textureArray: {fileID: 0}
   color:
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 1, g: 1, b: 1, a: 1}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
@@ -226,8 +226,8 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   scrollDirection:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0, y: 0.1}
+  - {x: 0.1, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
@@ -324,9 +324,42 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  oldLayerWeight:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   loopTime:
-  - 0
-  - 0
+  - 0.00001
+  - 0.00001
   - 0
   - 0
   - 0
@@ -358,7 +391,7 @@ MonoBehaviour:
   - 0
   - 0
   displacementID:
-  - 0
+  - 2
   - 0
   - 0
   - 0
@@ -392,7 +425,7 @@ MonoBehaviour:
   - 0
   textureScale:
   - 1
-  - 0
+  - 1
   - 0
   - 0
   - 0
@@ -424,6 +457,14 @@ MonoBehaviour:
   - 0
   - 0
   noiseTexture: {fileID: 0}
+  noiseData:
+    NoiseType: 0
+    offset: {x: 0, y: 0}
+    frequency: 0
+    octaves: 1
+    amplitudeFalloff: 0
+    contrast: 0
+    generateAlpha: 0
 --- !u!64 &58090599
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -673,7 +714,40 @@ MonoBehaviour:
   - 1
   - 1
   - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  oldLayerWeight:
   - 1
+  - 0
+  - 0
+  - 0
   - 0
   - 0
   - 0
@@ -802,6 +876,14 @@ MonoBehaviour:
   - 0
   - 0
   noiseTexture: {fileID: 0}
+  noiseData:
+    NoiseType: 0
+    offset: {x: 0, y: 0}
+    frequency: 0
+    octaves: 0
+    amplitudeFalloff: 0
+    contrast: 0
+    generateAlpha: 0
 --- !u!65 &98209510
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1006,12 +1088,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
-  mat: {fileID: 2100000, guid: 06465a594baf094459fc065f58dee9ea, type: 2}
-  currentLayer: 2
+  mat: {fileID: 2100000, guid: 81701cd312289154bb0af3859c944614, type: 2}
+  currentLayer: 1
   textures:
   - {fileID: 2800000, guid: 41d0ff40487e65040817c3a33d0fd061, type: 3}
-  - {fileID: 2800000, guid: bfd25b49a0d0d1349ae4d4660b60c96a, type: 3}
-  - {fileID: 2800000, guid: 53b3ccd456924754ba5b58c89dc619bc, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
@@ -1044,8 +1126,8 @@ MonoBehaviour:
   textureArray: {fileID: 0}
   color:
   - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
   - {r: 0, g: 0, b: 0, a: 0}
@@ -1077,8 +1159,8 @@ MonoBehaviour:
   - {r: 0, g: 0, b: 0, a: 0}
   scrollDirection:
   - {x: 0, y: 0}
-  - {x: 0.009, y: 0}
-  - {x: 0.12, y: 0.09}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
@@ -1143,7 +1225,40 @@ MonoBehaviour:
   - {x: 0, y: 0}
   layerWeight:
   - 1
-  - 1
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  oldLayerWeight:
+  - 0
+  - 0
   - 0
   - 0
   - 0
@@ -1175,9 +1290,9 @@ MonoBehaviour:
   - 0
   - 0
   loopTime:
-  - 0.00001
-  - 0.00001
-  - 0.03
+  - 0
+  - 0
+  - 0
   - 0
   - 0
   - 0
@@ -1208,7 +1323,7 @@ MonoBehaviour:
   - 0
   - 0
   displacementID:
-  - 3
+  - 0
   - 0
   - 0
   - 0
@@ -1242,8 +1357,8 @@ MonoBehaviour:
   - 0
   textureScale:
   - 1
-  - 1
-  - 1.1
+  - 0
+  - 0
   - 0
   - 0
   - 0
@@ -1274,6 +1389,14 @@ MonoBehaviour:
   - 0
   - 0
   noiseTexture: {fileID: 0}
+  noiseData:
+    NoiseType: 0
+    offset: {x: 0, y: 0}
+    frequency: 0
+    octaves: 1
+    amplitudeFalloff: 0
+    contrast: 1
+    generateAlpha: 0
 --- !u!64 &606121093
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1307,7 +1430,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06465a594baf094459fc065f58dee9ea, type: 2}
+  - {fileID: 2100000, guid: 81701cd312289154bb0af3859c944614, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1345,7 +1468,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 606121091}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.01, y: 0, z: -0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1438,7 +1561,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 3.82, z: 11.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1645,6 +1768,39 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  oldLayerWeight:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   loopTime:
   - 0.05
   - 0.1
@@ -1745,6 +1901,14 @@ MonoBehaviour:
   - 0
   - 0
   noiseTexture: {fileID: 0}
+  noiseData:
+    NoiseType: 0
+    offset: {x: 0, y: 0}
+    frequency: 0
+    octaves: 0
+    amplitudeFalloff: 0
+    contrast: 0
+    generateAlpha: 0
 --- !u!135 &922016744
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2266,6 +2430,39 @@ MonoBehaviour:
   - 0
   - 0
   - 0
+  oldLayerWeight:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
   loopTime:
   - Infinity
   - 0.05
@@ -2366,6 +2563,14 @@ MonoBehaviour:
   - 0
   - 0
   noiseTexture: {fileID: 0}
+  noiseData:
+    NoiseType: 0
+    offset: {x: 0, y: 0}
+    frequency: 1
+    octaves: 1
+    amplitudeFalloff: 0
+    contrast: 0
+    generateAlpha: 0
 --- !u!65 &1215827174
 BoxCollider:
   m_ObjectHideFlags: 0

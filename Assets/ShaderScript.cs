@@ -12,7 +12,8 @@ public class ShaderScript : MonoBehaviour
     public Material mat;
     private const int NUMBER_OF_LAYERS = 32;
 
-    public int currentLayer=0;
+    public int currentLayer = 0;
+    private double lastRedraw = 0;
 
     //Global settings
 
@@ -26,42 +27,60 @@ public class ShaderScript : MonoBehaviour
     public Vector2[] scrollDirection = new Vector2[NUMBER_OF_LAYERS];
     public Vector2[] scrollOffset = new Vector2[NUMBER_OF_LAYERS];
     public float[] layerWeight = new float[NUMBER_OF_LAYERS];
+    public float[] oldLayerWeight = new float[NUMBER_OF_LAYERS];
     public float[] loopTime = new float[NUMBER_OF_LAYERS];
     public float[] displacementID = new float[NUMBER_OF_LAYERS];
     public float[] textureScale = new float[NUMBER_OF_LAYERS];
 
+
     public Texture2D noiseTexture;
 
-    public struct GeneratedTextureData
+    public enum NoiseType { PERLIN, UNIFORM };
+    [System.Serializable]
+    public struct NoiseData
     {
-        public GeneratedTextureData(string type, Vector2 offset, float freq, int oct, float af)
+        public NoiseData(NoiseType type = default, Vector2 off = default, float freq = default, int oct = 1, float af = default, float cont = 1, bool alpha = default)
         {
             NoiseType = type;
-            Offset = offset;
+            offset = off;
             frequency = freq;
             octaves = oct;
             amplitudeFalloff = af;
+            contrast = cont;
+            generateAlpha = alpha;
+            Debug.Log("Constructor Called!\n" + type + ", " + off + ", " + freq + ", " + oct + ", " + af + ", " + cont + ", " + alpha);
         }
-        public string NoiseType;
-        public Vector2 Offset;
+        public NoiseType NoiseType;
+        public Vector2 offset;
         public float frequency;
         public int octaves;
         public float amplitudeFalloff;
-    }
+        public float contrast;
+        public bool generateAlpha;
 
-    GeneratedTextureData noiseTexData;
+        public static NoiseData init => new NoiseData(NoiseType.PERLIN);
+    }
+    public NoiseData noiseData;
+    private NoiseData generatedNoiseData;
+
+
 
     private void OnDrawGizmos()
     {
+        if (Time.realtimeSinceStartupAsDouble - lastRedraw > 1.0)
+        {
+            ReloadShader();
+        }
+        lastRedraw = Time.realtimeSinceStartupAsDouble;
         if (shader == null || mat == null) return;
         float[] temp = new float[NUMBER_OF_LAYERS];
-        for(int i=0; i < NUMBER_OF_LAYERS; i++)
+        for (int i = 0; i < NUMBER_OF_LAYERS; i++)
         {
             //loopTime[i] = (float)GCD(scrollDirection[i].x, scrollDirection[i].y);
             if (loopTime[i] != 0)
             {
                 temp[i] = 1 / loopTime[i];
-                temp[i] = (float)(Time.realtimeSinceStartupAsDouble % (double)(temp[i]/textureScale[i]));
+                temp[i] = (float)(Time.realtimeSinceStartupAsDouble % (double)(temp[i] / textureScale[i]));
             }
             else
             {
@@ -69,29 +88,21 @@ public class ShaderScript : MonoBehaviour
             }
         }
         mat.SetFloatArray("_scrollTimer", temp);
-        //mat.SetFloatArray("_scrollTimer", Time.realtimeSinceStartup % (1 / loopTime[0]));        //TODO: Update to proper layer usage
     }
-    
+
+
     private void OnValidate()
     {
         if (mat == null || shader == null) return;
         mat.shader = shader;
-        //Upload new texture?
-        //SetCurrentTexture(currentLayer);
         if (textures == null) return;
         if (textures[0] != null)
         {
             textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
             textureArray.hideFlags = HideFlags.DontSave;
-            //color = new Color[NUMBER_OF_LAYERS];
         }
-        //mat.SetFloat("_scrollTimer", Time.realtimeSinceStartup);
 
-        float[] scrollDir = new float[2];
-        scrollDir[0] = scrollDirection[0].x;        //TODO: Update to proper layer usage
-        scrollDir[1] = scrollDirection[0].y;       //TODO: Update to proper layer usage
-        mat.SetFloatArray("_scrollDirection", scrollDir);
-        mat.SetTexture("_textureArray", textureArray);
+        UnityEditor.SceneManagement.EditorSceneManager.sceneSaved += ReloadOnSave;
         ReloadShader();
     }
 
@@ -120,19 +131,23 @@ public class ShaderScript : MonoBehaviour
         mat.SetFloatArray("_scrollTimer", temp);
     }
 
+    private void ReloadOnSave(UnityEngine.SceneManagement.Scene scene)
+    {
+        ReloadShader();
+    }
+
     public void ReloadShader()
     {
         if (textureArray == null)
         {
             if (textures[0] != null)
             {
-                //Debug.Log("Allocated Texture Array");
                 textureArray = new Texture2DArray(textures[0].width, textures[0].height, NUMBER_OF_LAYERS, TextureFormat.RGBA32, true, true);
                 textureArray.hideFlags = HideFlags.DontSave;
             }
             else
             {
-                Debug.Log("Assign texture to layer 1");
+                if(this.mat != null) Debug.Log("Assign texture to layer 1. GameObject: " + this.gameObject.name);
                 return;
             }
         }
@@ -146,7 +161,6 @@ public class ShaderScript : MonoBehaviour
             }
 
         }
-        //Debug.Log("Button Pressed");
         textureArray.Apply();
         mat.SetTexture("_textureArray", textureArray);
 
@@ -176,18 +190,25 @@ public class ShaderScript : MonoBehaviour
         }
         mat.SetFloat("_totalWeight", totalWeight);
         mat.SetFloatArray("_layerWeight", layerWeight);
-        //mat.SetFloatArray("_scrollDirection", scrollDir);
 
     }
 
     private void Reset()
-    { 
+    {
+        textures = new Texture2D[NUMBER_OF_LAYERS];
         color = new Color[NUMBER_OF_LAYERS];
         textureArray = null;
         scrollDirection = new Vector2[NUMBER_OF_LAYERS];
+        scrollOffset = new Vector2[NUMBER_OF_LAYERS];
         layerWeight = new float[NUMBER_OF_LAYERS];
+        oldLayerWeight = new float[NUMBER_OF_LAYERS];
         loopTime = new float[NUMBER_OF_LAYERS];
-        
+        displacementID = new float[NUMBER_OF_LAYERS];
+        textureScale = new float[NUMBER_OF_LAYERS];
+        noiseData = NoiseData.init;
+        noiseTexture = null;
+        generatedNoiseData = default;
+
     }
 
     public void SetCurrentTexture(int layer)
@@ -205,11 +226,9 @@ public class ShaderScript : MonoBehaviour
         if (textureArray == null) return;
         Debug.Log("TexArr not null");
         Color[] colors = new Color[textureArray.width * textureArray.height];
-        //Color[] colors = textures.GetPixels(layer);
         colors = textureArray.GetPixels(layer);
         textures[layer].SetPixels(colors);
         
-        //currentTexture.SetPixels(colors);
     }
 
 
@@ -245,28 +264,16 @@ public class ShaderScript : MonoBehaviour
 
     public Texture2D GenerateNoise()
     {
-        noiseTexData = new GeneratedTextureData("Uniform",default, default,default,default);
-        Texture2D temp = new Texture2D(512, 512, TextureFormat.RGBA32, true, true);
-        for (int i = 0; i < temp.width; i++)
+        return noiseData.NoiseType switch
         {
-            for (int j = 0; j < temp.height; j++)
-            {
-                float greyScale = UnityEngine.Random.Range(0f, 1f);
-                //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
-                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale));
-                //temp.SetPixel(i, j, Color.blue);
-
-            }
-        }
-        temp.Apply();
-        noiseTexture = temp;
-        noiseTexture.hideFlags = HideFlags.DontSave;
-        return noiseTexture;
+            NoiseType.PERLIN => GeneratePerlinNoise(),
+            NoiseType.UNIFORM => GenerateUniformNoise(),
+            _ => null,
+        };
     }
 
-    public Texture2D GeneratePerlinNoise(Vector2 offset = default, float frequency = 1f, int octaves = 1, float amplitudeFalloff = 1f)
+    public Texture2D GeneratePerlinNoise()
     {
-        noiseTexData = new GeneratedTextureData("Perlin", offset, frequency, octaves, amplitudeFalloff);
         int width, height;
         if (textures != null)
         {
@@ -285,25 +292,46 @@ public class ShaderScript : MonoBehaviour
                 float y = (float)j / (float)height;
                 float greyScale = 0;
                 float powSum = 0f;
-                for (int octave = 1; octave <= octaves; octave++)
+                for (int octave = 1; octave <= noiseData.octaves; octave++)
                 {
-                    //greyScale = greyScale + (amplitudeFalloff * 1 - greyScale) / octave;
-                    float amplitudePow = (float)Math.Pow(amplitudeFalloff, octave - 1);
+                    float amplitudePow = (float)Math.Pow(noiseData.amplitudeFalloff, octave - 1);
                     powSum += amplitudePow;
                     //if (i == 200 && j == 200) Debug.Log(((amplitudeFalloff * 1) - amplitudeFalloff * greyScale) / (powSum));
-                    //if (i == 200 && j == 200) Debug.Log("PowSum: " + powSum);
-                    greyScale += ((amplitudePow * Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave)) - amplitudeFalloff*greyScale) / (powSum);
-                    if (i == 200 && j == 200) Debug.Log("greyScale: " + greyScale);
-                    //greyScale += ((((octave == 1) ? 1 : amplitudeFalloff) * Mathf.PerlinNoise(x * frequency * octave, y * frequency * octave)) - greyScale) / powSum;
+                    greyScale += ((amplitudePow * Mathf.PerlinNoise(noiseData.offset.x + x * noiseData.frequency * octave, noiseData.offset.y + y * noiseData.frequency * octave)) - noiseData.amplitudeFalloff*greyScale) / (powSum);
                 }
-                //float greyScale = Mathf.PerlinNoise(x+offset.x, y+offset.y);
-                //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
-                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale));
-                //temp.SetPixel(i, j, Color.blue);
+                greyScale -= .5f;
+                greyScale *= noiseData.contrast;
+                greyScale += .5f;
+                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale, noiseData.generateAlpha ? greyScale : 1));
             }
         }
         temp.Apply();
         noiseTexture = temp;
+        noiseTexture.hideFlags = HideFlags.DontSave;
+        generatedNoiseData = noiseData;
+        return noiseTexture;
+    }
+
+    public Texture2D GenerateUniformNoise()
+    {
+        Texture2D temp = new Texture2D(512, 512, TextureFormat.RGBA32, true, true);
+        for (int i = 0; i < temp.width; i++)
+        {
+            for (int j = 0; j < temp.height; j++)
+            {
+                float greyScale = UnityEngine.Random.Range(0f, 1f);
+                greyScale -= .5f;
+                greyScale *= noiseData.contrast;
+                greyScale += .5f;
+                //temp.SetPixel(i, j, new Color(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f)));
+                temp.SetPixel(i, j, new Color(greyScale, greyScale, greyScale, noiseData.generateAlpha ? greyScale : 1));
+
+            }
+        }
+        temp.Apply();
+        noiseTexture = temp;
+        noiseTexture.hideFlags = HideFlags.DontSave;
+        generatedNoiseData = noiseData;
         return noiseTexture;
     }
 
@@ -318,10 +346,10 @@ public class ShaderScript : MonoBehaviour
             System.IO.Directory.CreateDirectory(path);
         }
         string timestamp = System.DateTime.Now.ToString("yyMMdd_HHmmss");
-        string filePathName = path + noiseTexData.NoiseType + "Noise_";
-        if (noiseTexData.NoiseType == "Perlin")
+        string filePathName = path + GetString(generatedNoiseData.NoiseType) + "Noise_";
+        if (noiseData.NoiseType == NoiseType.PERLIN)
         {
-            filePathName += "off" + noiseTexData.Offset + "_freq" + noiseTexData.frequency + "_oct" + noiseTexData.octaves + "_af" + noiseTexData.amplitudeFalloff;
+            filePathName += "off" + generatedNoiseData.offset + "_freq" + generatedNoiseData.frequency + "_oct" + generatedNoiseData.octaves + "_af" + generatedNoiseData.amplitudeFalloff + "_cont" + generatedNoiseData.contrast + "_alpha" + (generatedNoiseData.generateAlpha?"on":"off");
         }
         else
         {
@@ -350,5 +378,17 @@ public class ShaderScript : MonoBehaviour
         dataPath = dataPath.Replace("Assets", "");
         texturePath = texturePath.Replace(dataPath, "");
         textures[targetLayer] = (Texture2D) AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D));
+        textureScale[targetLayer] = 1;
+    }
+
+    public static string GetString(NoiseType type)
+    {
+        return type switch
+        {   
+            NoiseType.PERLIN => "Perlin",
+            NoiseType.UNIFORM => "Uniform",
+            _ => "Undefined",
+        };
     }
 }
+
