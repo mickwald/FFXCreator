@@ -48,7 +48,6 @@ public class ShaderScript : MonoBehaviour
             amplitudeFalloff = af;
             contrast = cont;
             generateAlpha = alpha;
-            Debug.Log("Constructor Called!\n" + type + ", " + off + ", " + freq + ", " + oct + ", " + af + ", " + cont + ", " + alpha);
         }
         public NoiseType NoiseType;
         public Vector2 offset;
