@@ -50,10 +50,10 @@ Shader "Custom/TextureShader"
         //Displace layer [index] with data from index. 0 for no displacement layer, 1-32 for displacement from layer (1-32)-1)
         float _displacementIndex[NUMBER_OF_LAYERS];
         //float _scrollDirection[2];
-        fixed _scrollDirectionX[NUMBER_OF_LAYERS];
-        fixed _scrollDirectionY[NUMBER_OF_LAYERS];
-        fixed _scrollOffsetX[NUMBER_OF_LAYERS];
-        fixed _scrollOffsetY[NUMBER_OF_LAYERS];
+        float _scrollDirectionX[NUMBER_OF_LAYERS];
+        float _scrollDirectionY[NUMBER_OF_LAYERS];
+        float _scrollOffsetX[NUMBER_OF_LAYERS];
+        float _scrollOffsetY[NUMBER_OF_LAYERS];
         fixed4 t[NUMBER_OF_LAYERS];
         fixed displace[NUMBER_OF_LAYERS];
 
