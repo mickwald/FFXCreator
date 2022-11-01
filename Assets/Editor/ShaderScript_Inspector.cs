@@ -91,6 +91,7 @@ public class ShaderScript_Inspector : Editor
             string path = AssetDatabase.GetAssetPath(texture);
             TextureImporter imp = (TextureImporter)TextureImporter.GetAtPath(path);
             imp.isReadable = true;
+            imp.textureCompression = TextureImporterCompression.Uncompressed;
             imp.SaveAndReimport();
             ssScript.ReloadShader();
             EditorUtility.SetDirty(ssScript);
@@ -154,9 +155,9 @@ public class ShaderScript_Inspector : Editor
             EditorGUILayout.EndHorizontal();
             if (!temp)
             {
-                ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.oldLayerWeight[currentLayer - 1];
+                //ssScript.layerWeight[(int)ssScript.displacementID[currentLayer - 1] - 1] = ssScript.oldLayerWeight[currentLayer - 1];
                 ssScript.displacementID[currentLayer - 1] = (float)0;
-                ssScript.oldLayerWeight[currentLayer - 1] = 0;
+                //ssScript.oldLayerWeight[currentLayer - 1] = 0;
                 ssScript.ReloadShader();
                 EditorUtility.SetDirty(ssScript);
             }
