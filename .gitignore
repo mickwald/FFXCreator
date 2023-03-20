@@ -21,6 +21,10 @@
 /[Aa]ssets/[Nn]oiseTextures.meta
 /[Aa]ssets/[Nn]oiseTextures/*
 
+# Project material files
+/[Aa]ssets/[Ss]hader[Ss]cript[Mm]aterials.meta
+/[Aa]ssets/[Ss]hader[Ss]cript[Mm]aterials/*
+
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
 
