@@ -39,7 +39,7 @@ public class ShaderScript : MonoBehaviour
     [System.Serializable]
     public struct NoiseData
     {
-        public NoiseData(NoiseType type = default, Vector2 off = default, float freq = default, int oct = 1, float af = default, float cont = 1, bool alpha = default)
+        public NoiseData(NoiseType type = default, Vector2 off = default, float freq = default, int oct = 1, float af = .5f, float cont = 1, bool alpha = default)
         {
             NoiseType = type;
             offset = off;
@@ -132,7 +132,7 @@ public class ShaderScript : MonoBehaviour
 
     private void ReloadOnSave(UnityEngine.SceneManagement.Scene scene)
     {
-        ReloadShader();
+        //ReloadShader();
     }
 
     public void ReloadShader()
@@ -247,7 +247,7 @@ public class ShaderScript : MonoBehaviour
             a = b;
             b = Remainder;
         }
-        return a/intFactor;
+        return (float)a/intFactor;
 
 
     }
