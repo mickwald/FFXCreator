@@ -1008,11 +1008,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
   mat: {fileID: 2100000, guid: 18a1649ebc5922d418b1b0ee5c4b012e, type: 2}
-  currentLayer: 4
+  currentLayer: 3
   textures:
   - {fileID: 2800000, guid: eec35dde8230e994aa0ba3e2b9cc439f, type: 3}
   - {fileID: 2800000, guid: c0dcd47c6075aa14590915eb42c4b7c5, type: 3}
-  - {fileID: 2800000, guid: fa54df98fa7555f4299fa20fd9de0b34, type: 3}
+  - {fileID: 2800000, guid: a01391b4837e5274fa2d409ed7454efd, type: 3}
   - {fileID: 2800000, guid: c398e78d1a7d3e54c87d271b04d0936c, type: 3}
   - {fileID: 0}
   - {fileID: 0}
@@ -1493,7 +1493,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &580985077
 Transform:
   m_ObjectHideFlags: 0
@@ -4904,7 +4904,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348943237}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.028, y: 0.14, z: -0.038}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 580985077}
@@ -5574,7 +5574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
   mat: {fileID: 2100000, guid: 18a1649ebc5922d418b1b0ee5c4b012e, type: 2}
-  currentLayer: 3
+  currentLayer: 1
   textures:
   - {fileID: 2800000, guid: eec35dde8230e994aa0ba3e2b9cc439f, type: 3}
   - {fileID: 2800000, guid: c0dcd47c6075aa14590915eb42c4b7c5, type: 3}
@@ -5993,7 +5993,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
   mat: {fileID: 2100000, guid: 18a1649ebc5922d418b1b0ee5c4b012e, type: 2}
-  currentLayer: 2
+  currentLayer: 1
   textures:
   - {fileID: 2800000, guid: eec35dde8230e994aa0ba3e2b9cc439f, type: 3}
   - {fileID: 2800000, guid: c0dcd47c6075aa14590915eb42c4b7c5, type: 3}
@@ -6898,7 +6898,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2091692202
 Transform:
   m_ObjectHideFlags: 0
@@ -6927,11 +6927,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 4800000, guid: b0aa88eeb87d92f42a880573a8b06bb7, type: 3}
   mat: {fileID: 2100000, guid: 18a1649ebc5922d418b1b0ee5c4b012e, type: 2}
-  currentLayer: 4
+  currentLayer: 3
   textures:
   - {fileID: 2800000, guid: eec35dde8230e994aa0ba3e2b9cc439f, type: 3}
   - {fileID: 2800000, guid: c0dcd47c6075aa14590915eb42c4b7c5, type: 3}
-  - {fileID: 2800000, guid: fa54df98fa7555f4299fa20fd9de0b34, type: 3}
+  - {fileID: 2800000, guid: a01391b4837e5274fa2d409ed7454efd, type: 3}
   - {fileID: 2800000, guid: c398e78d1a7d3e54c87d271b04d0936c, type: 3}
   - {fileID: 0}
   - {fileID: 0}
@@ -7230,11 +7230,11 @@ MonoBehaviour:
   noiseData:
     NoiseType: 0
     offset: {x: 0, y: 0}
-    frequency: 5
-    octaves: 3
+    frequency: 250
+    octaves: 1
     amplitudeFalloff: 0.5
-    contrast: 0.5
-    generateAlpha: 0
+    contrast: 1
+    generateAlpha: 1
 --- !u!64 &2091692204
 MeshCollider:
   m_ObjectHideFlags: 0
