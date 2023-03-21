@@ -2,8 +2,8 @@ using UnityEditor;
 using UnityEngine;
 using System.Collections;
 
-[CustomEditor(typeof(ShaderScript))]
-public class ShaderScript_Inspector : Editor
+[CustomEditor(typeof(FFXCreator))]
+public class FFXCreator_Inspector : Editor
 {
     int currentLayer;
     bool hideTextureInspector = false;
@@ -18,10 +18,10 @@ public class ShaderScript_Inspector : Editor
         EditorGUILayout.Space();*/
 
         //Shader and material inputs:
-        ShaderScript ssScript = (ShaderScript)target;
+        FFXCreator ssScript = (FFXCreator)target;
         if(ssScript.shader == null)
         {
-            Shader textureShader = (Shader)AssetDatabase.LoadAssetAtPath("Assets/TextureShader.shader", typeof(Shader));
+            Shader textureShader = (Shader)AssetDatabase.LoadAssetAtPath("Assets/FFXShader.shader", typeof(Shader));
             ssScript.shader = textureShader;
         }
 
@@ -30,13 +30,13 @@ public class ShaderScript_Inspector : Editor
             if (ssScript.mat == null)
             {
                 Material material = new Material(ssScript.shader);
-                string path = Application.dataPath + "/ShaderScriptMaterials/";
+                string path = Application.dataPath + "/FFXCreatorMaterials/";
                 if (!System.IO.Directory.Exists(path))
                 {
                     Debug.Log("Tried creating Path");
                     System.IO.Directory.CreateDirectory(path);
                 }
-                string filename = "Assets/ShaderScriptMaterials/" + ssScript.gameObject.name + ".mat";
+                string filename = "Assets/FFXCreatorMaterials/" + ssScript.gameObject.name + ".mat";
                 AssetDatabase.CreateAsset(material, filename);
                 ssScript.mat = (Material)AssetDatabase.LoadAssetAtPath(AssetDatabase.GetAssetPath(material), typeof(Material));
                 ssScript.ApplyMaterial();
@@ -62,7 +62,7 @@ public class ShaderScript_Inspector : Editor
         if (!hideNoiseInspector) CreateNoiseInspector(ssScript);
     }
 
-    private void CreateLayerInspector(ShaderScript ssScript)
+    private void CreateLayerInspector(FFXCreator ssScript)
     {
         
         //Script settings:
@@ -202,7 +202,7 @@ public class ShaderScript_Inspector : Editor
         }*/
     }
 
-    private void CreateNoiseInspector(ShaderScript ssScript)
+    private void CreateNoiseInspector(FFXCreator ssScript)
     {
 
         GUIStyle style = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
@@ -211,14 +211,14 @@ public class ShaderScript_Inspector : Editor
         noiseTex = (Texture2D)EditorGUILayout.ObjectField("Noise texture", ssScript.noiseTexture, typeof(Texture2D), true);
         if(noiseTex != null) noiseTex.hideFlags = HideFlags.DontSave;
 
-        ssScript.noiseData.NoiseType = (ShaderScript.NoiseType)EditorGUILayout.EnumPopup("NoiseType", ssScript.noiseData.NoiseType);
+        ssScript.noiseData.NoiseType = (FFXCreator.NoiseType)EditorGUILayout.EnumPopup("NoiseType", ssScript.noiseData.NoiseType);
 
         switch (ssScript.noiseData.NoiseType)
         {
-            case ShaderScript.NoiseType.PERLIN:
+            case FFXCreator.NoiseType.PERLIN:
                 CreatePerlinSettings(ssScript);
                 break;
-            case ShaderScript.NoiseType.UNIFORM:
+            case FFXCreator.NoiseType.UNIFORM:
                 CreateUniformSettings(ssScript);
                 break;
             default:
@@ -245,7 +245,7 @@ public class ShaderScript_Inspector : Editor
         EditorGUILayout.EndHorizontal();
     }
 
-    private void CreatePerlinSettings(ShaderScript ssScript)
+    private void CreatePerlinSettings(FFXCreator ssScript)
     {
         //Noise settings
         ssScript.noiseData.offset = EditorGUILayout.Vector2Field("Offset", ssScript.noiseData.offset);
@@ -273,7 +273,7 @@ public class ShaderScript_Inspector : Editor
         }
     }
 
-    private void CreateUniformSettings(ShaderScript ssScript)
+    private void CreateUniformSettings(FFXCreator ssScript)
     {
         EditorGUI.BeginChangeCheck();
         float contrast = EditorGUILayout.FloatField("Contrast", ssScript.noiseData.contrast);

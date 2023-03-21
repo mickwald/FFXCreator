@@ -1,4 +1,4 @@
-Shader "Custom/TextureShader"
+Shader "Custom/FFXShader"
 {
     Properties
     {

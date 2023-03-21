@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
 
-public class ShaderScript : MonoBehaviour
+public class FFXCreator : MonoBehaviour
 {
 
     public Shader shader;
